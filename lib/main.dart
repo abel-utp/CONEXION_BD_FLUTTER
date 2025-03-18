@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+import 'package:prueba_lunes_17/menu.dart';
+
 void main() {
   runApp(const MyApp());
 }
@@ -71,7 +73,7 @@ class _LoginPageState extends State<LoginPage> {
         // Login exitoso, navegar a la pantalla de bienvenida
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => const WelcomePage()),
+          MaterialPageRoute(builder: (context) => const MainScreen()),
         );
       } else {
         // Login fallido, mostrar mensaje de error
@@ -167,7 +169,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 }
 
-class WelcomePage extends StatelessWidget {
+/*class WelcomePage extends StatelessWidget {
   const WelcomePage({Key? key}) : super(key: key);
 
   @override
@@ -218,4 +220,4 @@ class WelcomePage extends StatelessWidget {
       ),
     );
   }
-}
+}*/
