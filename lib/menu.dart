@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:prueba_lunes_17/main.dart';
+import 'package:prueba_lunes_17/marketplace.dart';
+import 'package:prueba_lunes_17/masterclass_1.dart';
+import 'package:prueba_lunes_17/registro_principal.dart';
 
 void main() {
   // Punto de entrada de la aplicación
@@ -113,14 +116,14 @@ class _MainScreenState extends State<MainScreen> {
                 icon: Icons.school,
                 title: 'Masterclass',
                 index: 2,
-                /* onTap: () {
+                onTap: () {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
                       builder: (context) => MasterclassCreationScreen(),
                     ),
                   );
-                },*/
+                },
               ),
 
               ListTile(
@@ -129,28 +132,28 @@ class _MainScreenState extends State<MainScreen> {
                   'Marketplace',
                   style: TextStyle(color: Colors.white),
                 ),
-                /* onTap: () {
+                onTap: () {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
                       builder: (context) => const PromoHomePage(),
                     ),
                   );
-                },*/
+                },
               ),
 
               _buildMenuItem(
                 icon: Icons.assignment,
                 title: 'Registros',
                 index: 4,
-                /*onTap: () {
+                onTap: () {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
                       builder: (context) => MasterPromoLiderApp(),
                     ),
                   );
-                },*/
+                },
               ),
 
               const Spacer(), // Espacio flexible para empujar el botón de cerrar sesión al fondo
