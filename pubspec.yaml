@@ -35,6 +35,7 @@ flutter:
 
   assets:
     - assets/background.jpg
+    - assets/background_2.jpg
     - assets/promolider_logo.png
     - assets/1.jpg
     - assets/2.jpg
