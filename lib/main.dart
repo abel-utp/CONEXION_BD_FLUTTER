@@ -99,259 +99,298 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
-        children: [
-          // Fondo superior con imagen
-          Positioned(
-            top: 0,
-            left: 0,
-            right: 0,
-            height: MediaQuery.of(context).size.height * 0.5, // Mitad superior
-            child: Container(
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage('assets/background.jpg'),
-                  fit: BoxFit.cover,
-                  colorFilter: ColorFilter.mode(
-                    const Color.fromARGB(
-                      255,
-                      255,
-                      255,
-                      255,
-                    ).withOpacity(0.5), // Oscurece un poco la imagen
-                    BlendMode.darken,
-                  ),
-                ),
-              ),
-            ),
-          ),
-          // Contenido existente
-          Center(
-            child: Container(
-              margin: const EdgeInsets.symmetric(horizontal: 24),
-              padding: const EdgeInsets.all(24),
-              decoration: BoxDecoration(
-                color: const Color.fromRGBO(32, 35, 41, 1).withOpacity(1.0),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
+      body: SingleChildScrollView(
+        child: Stack(
+          children: [
+            // Ajustamos la altura del Stack para que sea al menos el alto de la pantalla
+            SizedBox(
+              height: MediaQuery.of(context).size.height,
+              child: Stack(
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Image.asset(
-                        'assets/promolider_logo.png', // Asegúrate de tener esta imagen
-                        width: 220,
-                        height: 100,
+                  // Fondo superior con imagen
+                  Positioned(
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    height: MediaQuery.of(context).size.height * 0.5,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: AssetImage('assets/background.jpg'),
+                          fit: BoxFit.cover,
+                          colorFilter: ColorFilter.mode(
+                            const Color.fromARGB(
+                              255,
+                              255,
+                              255,
+                              255,
+                            ).withOpacity(0.5),
+                            BlendMode.darken,
+                          ),
+                        ),
                       ),
-                    ],
-                  ),
-                  const SizedBox(height: 12),
-                  const Text(
-                    'Impulsa tu liderazgo, comienza ahora.',
-                    style: TextStyle(
-                      color: Color.fromARGB(255, 255, 255, 255),
-                      fontSize: 14,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 32),
-
-                  // Etiqueta de Usuario
-                  const Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      'Usuario',
-                      style: TextStyle(color: Colors.white, fontSize: 14),
                     ),
                   ),
-                  const SizedBox(height: 8),
-
-                  TextField(
-                    controller: _usernameController,
-                    decoration: InputDecoration(
-                      labelText: 'Ingresar nombre de Usuario',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(30),
-                        borderSide: BorderSide.none,
-                      ),
-                      prefixIcon: const Icon(Icons.person),
-                      fillColor: Colors.white, // Añadir color de fondo blanco
-                      filled: true, // Habilitar el relleno
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-
-                  const Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      'Contraseña',
-                      style: TextStyle(color: Colors.white, fontSize: 14),
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-
-                  TextField(
-                    controller: _passwordController,
-                    obscureText: true,
-                    decoration: InputDecoration(
-                      labelText: 'Ingresar Contraseña',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(30),
-                        borderSide: BorderSide.none,
-                      ),
-                      prefixIcon: const Icon(Icons.lock),
-                      fillColor: Colors.white, // Añadir color de fondo blanco
-                      filled: true, // Habilitar el relleno
-                    ),
-                  ),
-
-                  const SizedBox(height: 16),
-
-                  //Fila con checkbox "Recordarme"
-                  Row(
-                    children: [
-                      Checkbox(
-                        value: _rememberMe,
-                        onChanged: (value) {
-                          setState(() {
-                            _rememberMe = value ?? false;
-                          });
-                        },
-                        fillColor: MaterialStateProperty.resolveWith<Color>((
-                          Set<MaterialState> states,
-                        ) {
-                          return const Color.fromRGBO(
+                  // Contenido del formulario
+                  SafeArea(
+                    child: Center(
+                      child: Container(
+                        margin: const EdgeInsets.symmetric(horizontal: 24),
+                        padding: const EdgeInsets.all(24),
+                        decoration: BoxDecoration(
+                          color: const Color.fromRGBO(
                             32,
                             35,
                             41,
                             1,
-                          ).withOpacity(1.0);
-                        }),
-                      ),
-                      const Text(
-                        'Recuérdame',
-                        style: TextStyle(color: Colors.white, fontSize: 12),
-                      ),
-                      const Spacer(), // Espacio flexible
-                      TextButton(
-                        onPressed: () {
-                          // Función para recuperar contraseña
-                        },
-                        child: const Text(
-                          '¿Olvidaste tu contraseña?',
-                          style: TextStyle(
-                            color: Color.fromARGB(255, 255, 255, 255),
-                            fontSize: 12,
-                            decoration:
-                                TextDecoration.underline, // Subraya el texto
-                          ),
+                          ).withOpacity(1.0),
+                          borderRadius: BorderRadius.circular(12),
                         ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 16),
-
-                  // checkbox "No soy un robot"
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 6.0),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        border: Border.all(color: Colors.grey),
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(2.0),
-                        child: Row(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
-                            Checkbox(
-                              value: _notRobot,
-                              onChanged: (value) {
-                                setState(() {
-                                  _notRobot = value ?? false;
-                                });
-                              },
-                              fillColor:
-                                  MaterialStateProperty.resolveWith<Color>((
-                                    Set<MaterialState> states,
-                                  ) {
-                                    return const Color.fromRGBO(
-                                      32,
-                                      35,
-                                      41,
-                                      1,
-                                    ).withOpacity(1.0);
-                                  }),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Image.asset(
+                                  'assets/promolider_logo.png', // Asegúrate de tener esta imagen
+                                  width: 220,
+                                  height: 100,
+                                ),
+                              ],
                             ),
+                            //const SizedBox(height: 8),
                             const Text(
-                              'No soy un Robot',
+                              'Impulsa tu liderazgo, comienza ahora.',
                               style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 12,
+                                color: Color.fromARGB(255, 255, 255, 255),
+                                fontSize: 14,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                            const SizedBox(height: 12),
+
+                            // Etiqueta de Usuario
+                            const Align(
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                'Usuario',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 14,
+                                ),
                               ),
                             ),
-                            const Spacer(),
-                            Container(
-                              padding: const EdgeInsets.all(10),
-                              child: Image.asset(
-                                'assets/recaptcha.png', // Asegúrate de tener esta imagen
-                                height: 30,
+                            const SizedBox(height: 8),
+
+                            TextField(
+                              controller: _usernameController,
+                              decoration: InputDecoration(
+                                hintText:
+                                    'Ingresar nombre de Usuario', // Cambiar labelText por hintText
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(30),
+                                  borderSide: BorderSide.none,
+                                ),
+                                prefixIcon: const Icon(Icons.person),
+                                fillColor: Colors.white,
+                                filled: true,
                               ),
                             ),
+
+                            const SizedBox(height: 16),
+                            const Align(
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                'Contraseña',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 14,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+
+                            TextField(
+                              controller: _passwordController,
+                              obscureText: true,
+                              decoration: InputDecoration(
+                                hintText:
+                                    'Ingresar Contraseña', // Cambiar labelText por hintText
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(30),
+                                  borderSide: BorderSide.none,
+                                ),
+                                prefixIcon: const Icon(Icons.lock),
+                                fillColor: Colors.white,
+                                filled: true,
+                              ),
+                            ),
+
+                            //const SizedBox(height: 16),
+
+                            //Fila con checkbox "Recordarme"
+                            Row(
+                              children: [
+                                Checkbox(
+                                  value: _rememberMe,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      _rememberMe = value ?? false;
+                                    });
+                                  },
+                                  fillColor:
+                                      MaterialStateProperty.resolveWith<Color>((
+                                        Set<MaterialState> states,
+                                      ) {
+                                        return const Color.fromRGBO(
+                                          32,
+                                          35,
+                                          41,
+                                          1,
+                                        ).withOpacity(1.0);
+                                      }),
+                                ),
+                                const Text(
+                                  'Recuérdame',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 12,
+                                  ),
+                                ),
+                                const Spacer(), // Espacio flexible
+                                TextButton(
+                                  onPressed: () {
+                                    // Función para recuperar contraseña
+                                  },
+                                  child: const Text(
+                                    '¿Olvidaste tu contraseña?',
+                                    style: TextStyle(
+                                      color: Color.fromARGB(255, 255, 255, 255),
+                                      fontSize: 12,
+                                      decoration:
+                                          TextDecoration
+                                              .underline, // Subraya el texto
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            //const SizedBox(height: 16),
+
+                            // checkbox "No soy un robot"
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 6.0,
+                              ),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  border: Border.all(color: Colors.grey),
+                                  borderRadius: BorderRadius.circular(15),
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(2.0),
+                                  child: Row(
+                                    children: [
+                                      Checkbox(
+                                        value: _notRobot,
+                                        onChanged: (value) {
+                                          setState(() {
+                                            _notRobot = value ?? false;
+                                          });
+                                        },
+                                        fillColor:
+                                            MaterialStateProperty.resolveWith<
+                                              Color
+                                            >((Set<MaterialState> states) {
+                                              return const Color.fromRGBO(
+                                                32,
+                                                35,
+                                                41,
+                                                1,
+                                              ).withOpacity(1.0);
+                                            }),
+                                      ),
+                                      const Text(
+                                        'No soy un Robot',
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 12,
+                                        ),
+                                      ),
+                                      const Spacer(),
+                                      Container(
+                                        padding: const EdgeInsets.all(10),
+                                        child: Image.asset(
+                                          'assets/recaptcha.png', // Asegúrate de tener esta imagen
+                                          height: 30,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+
+                            //const SizedBox(height: 14),
+                            if (_errorMessage.isNotEmpty)
+                              Padding(
+                                padding: const EdgeInsets.only(top: 12.0),
+                                child: Text(
+                                  _errorMessage,
+                                  style: const TextStyle(color: Colors.red),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                            const SizedBox(height: 24),
+                            ElevatedButton(
+                              onPressed: _isLoading ? null : _login,
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: const Color.fromRGBO(
+                                  32,
+                                  35,
+                                  41,
+                                  1,
+                                ),
+                                foregroundColor: Colors.white,
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 16,
+                                ),
+                                side: const BorderSide(
+                                  color: Color.fromARGB(255, 10, 255, 23),
+                                  width: 2,
+                                ), // Agregar borde azul
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(
+                                    30,
+                                  ), // Mantener bordes redondeados
+                                ),
+                              ),
+                              child:
+                                  _isLoading
+                                      ? const CircularProgressIndicator(
+                                        color: Colors.white,
+                                      )
+                                      : const Text(
+                                        'Ingresar',
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                            ),
+                            const SizedBox(height: 24),
                           ],
                         ),
                       ),
                     ),
                   ),
-                  const SizedBox(height: 14),
-
-                  if (_errorMessage.isNotEmpty)
-                    Padding(
-                      padding: const EdgeInsets.only(top: 12.0),
-                      child: Text(
-                        _errorMessage,
-                        style: const TextStyle(color: Colors.red),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                  const SizedBox(height: 24),
-                  ElevatedButton(
-                    onPressed: _isLoading ? null : _login,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color.fromRGBO(32, 35, 41, 1),
-                      foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                      side: const BorderSide(
-                        color: Color.fromARGB(255, 10, 255, 23),
-                        width: 2,
-                      ), // Agregar borde azul
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(
-                          30,
-                        ), // Mantener bordes redondeados
-                      ),
-                    ),
-                    child:
-                        _isLoading
-                            ? const CircularProgressIndicator(
-                              color: Colors.white,
-                            )
-                            : const Text(
-                              'Ingresar',
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                  ),
-                  const SizedBox(height: 24),
                 ],
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
