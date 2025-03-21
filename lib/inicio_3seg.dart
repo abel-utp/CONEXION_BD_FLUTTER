@@ -46,10 +46,9 @@ class _PromoLiderScreenState extends State<PromoLiderScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // El cuerpo de la pantalla
       body: Container(
-        width: double.infinity, // Ocupa todo el ancho disponible
-        height: double.infinity, // Ocupa todo el alto disponible
+        width: double.infinity,
+        height: double.infinity,
         color: const Color.fromRGBO(
           32,
           35,
