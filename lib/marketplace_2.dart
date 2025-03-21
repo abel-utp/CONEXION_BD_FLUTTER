@@ -159,7 +159,7 @@ class CourseCard extends StatelessWidget {
                     ),
                   ),
 
-                  SizedBox(height: 44),
+                  SizedBox(height: 34),
 
                   // Registration Button
                   SizedBox(
@@ -198,6 +198,7 @@ class CourseCard extends StatelessWidget {
                 ],
               ),
             ),
+            SizedBox(height: 34),
           ],
         ),
       ),

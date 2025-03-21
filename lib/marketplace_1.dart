@@ -146,7 +146,7 @@ class CourseRegistrationScreen extends StatelessWidget {
                     ),
                   ),
 
-                  SizedBox(height: 44),
+                  SizedBox(height: 34),
 
                   // Registration Button
                   SizedBox(
@@ -183,6 +183,7 @@ class CourseRegistrationScreen extends StatelessWidget {
                 ],
               ),
             ),
+            SizedBox(height: 34),
           ],
         ),
       ),
