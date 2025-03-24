@@ -42,6 +42,9 @@ class _LoginPageState extends State<LoginPage> {
   bool _rememberMe = false;
   bool _notRobot = false;
 
+  //ABEL-VARIABLE PARA VISUALIZAR CONTRASEÑA
+  bool _passwordVisible = false;
+
   // Función para validar el login
   Future<void> _login() async {
     setState(() {
@@ -165,7 +168,7 @@ class _LoginPageState extends State<LoginPage> {
                               'Impulsa tu liderazgo, comienza ahora.',
                               style: TextStyle(
                                 color: Color.fromARGB(255, 255, 255, 255),
-                                fontSize: 14,
+                                fontSize: 17,
                               ),
                               textAlign: TextAlign.center,
                             ),
@@ -187,13 +190,14 @@ class _LoginPageState extends State<LoginPage> {
                             TextField(
                               controller: _usernameController,
                               decoration: InputDecoration(
-                                hintText:
-                                    'Ingresar nombre de Usuario', // Cambiar labelText por hintText
+                                hintText: 'Ingresar nombre de Usuario',
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(30),
                                   borderSide: BorderSide.none,
                                 ),
-                                prefixIcon: const Icon(Icons.person),
+                                suffixIcon: const Icon(
+                                  Icons.person,
+                                ), // Cambiado de prefixIcon a suffixIcon
                                 fillColor: Colors.white,
                                 filled: true,
                               ),
@@ -214,15 +218,26 @@ class _LoginPageState extends State<LoginPage> {
 
                             TextField(
                               controller: _passwordController,
-                              obscureText: true,
+                              obscureText:
+                                  !_passwordVisible, // Controla si la contraseña es visible
                               decoration: InputDecoration(
-                                hintText:
-                                    'Ingresar Contraseña', // Cambiar labelText por hintText
+                                hintText: 'Ingresar Contraseña',
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(30),
                                   borderSide: BorderSide.none,
                                 ),
-                                prefixIcon: const Icon(Icons.lock),
+                                suffixIcon: IconButton(
+                                  icon: Icon(
+                                    _passwordVisible
+                                        ? Icons.visibility
+                                        : Icons.visibility_off,
+                                  ),
+                                  onPressed: () {
+                                    setState(() {
+                                      _passwordVisible = !_passwordVisible;
+                                    });
+                                  },
+                                ),
                                 fillColor: Colors.white,
                                 filled: true,
                               ),
