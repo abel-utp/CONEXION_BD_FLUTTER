@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:prueba_lunes_17/registro_2_asistencia.dart';
+import 'dart:convert';
+
 import 'package:prueba_lunes_17/registro_principal.dart';
-import 'registro_2_asistencia.dart'; // Asegúrate de importar el archivo de destino
 
 void main() {
   runApp(MyApp());
@@ -16,24 +19,61 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class StudentListScreen extends StatelessWidget {
+class StudentListScreen extends StatefulWidget {
+  @override
+  _StudentListScreenState createState() => _StudentListScreenState();
+}
+
+class _StudentListScreenState extends State<StudentListScreen> {
+  List students = [];
+  bool isSearching = false;
+  TextEditingController searchController = TextEditingController();
+
+  // Función para obtener los datos desde la API
+  Future<void> fetchStudents() async {
+    final response = await http.get(
+      Uri.parse('http://192.168.18.125/api/get_students.php'),
+    );
+
+    if (response.statusCode == 200) {
+      setState(() {
+        students = json.decode(response.body);
+      });
+    } else {
+      throw Exception('Error al cargar los datos');
+    }
+  }
+
+  List getFilteredStudents() {
+    if (searchController.text.isEmpty) return students;
+    return students.where((student) {
+      return student['lastname'].toString().toLowerCase().contains(
+        searchController.text.toLowerCase(),
+      );
+    }).toList();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    fetchStudents(); // Cargar datos al iniciar
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFFF5F5F5),
       appBar: AppBar(
         backgroundColor: Colors.black,
 
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () {
-            Navigator.push(
+            Navigator.pushReplacement(
               context,
               MaterialPageRoute(builder: (context) => MasterPromoLiderApp()),
             );
           },
         ),
-
         title: Text(
           'Lista de estudiantes',
           style: TextStyle(color: Colors.white, fontSize: 16),
@@ -48,43 +88,72 @@ class StudentListScreen extends StatelessWidget {
 
       body: Column(
         children: [
-          // Barra de búsqueda y filtro
           Container(
             padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             color: Colors.white,
             child: Row(
               children: [
-                // Campo de búsqueda
                 Expanded(
                   child: Container(
                     padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                     decoration: BoxDecoration(
-                      color: Colors.grey.shade100,
+                      color: Colors.white,
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Row(
                       children: [
-                        Icon(Icons.search, color: Colors.grey, size: 20),
-                        SizedBox(width: 8),
-                        Expanded(
-                          child: Center(
-                            child: GestureDetector(
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => AttendanceScreen(),
-                                  ),
-                                );
-                              },
-                              child: Text(
-                                'Desarrollo Web Frontend',
-                                style: TextStyle(
-                                  color: Colors.green,
-                                  fontSize: 14,
-                                ),
-                              ),
+                        GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              isSearching = !isSearching;
+                              if (!isSearching) {
+                                searchController.clear();
+                              }
+                            });
+                          },
+                          child: Container(
+                            padding: EdgeInsets.only(left: 8),
+                            child: Icon(
+                              Icons.search,
+                              color: isSearching ? Colors.green : Colors.grey,
+                              size: 20,
                             ),
+                          ),
+                        ),
+                        Expanded(
+                          child: Container(
+                            padding: EdgeInsets.symmetric(horizontal: 16),
+                            child:
+                                isSearching
+                                    ? TextField(
+                                      controller: searchController,
+                                      decoration: InputDecoration(
+                                        hintText: 'Buscar estudiante...',
+                                        border: InputBorder.none,
+                                      ),
+                                      onChanged: (value) {
+                                        setState(() {});
+                                      },
+                                    )
+                                    : GestureDetector(
+                                      onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder:
+                                                (context) => AttendanceScreen(),
+                                          ),
+                                        );
+                                      },
+                                      child: Text(
+                                        'Desarrollo Web Frontend',
+                                        style: TextStyle(
+                                          color: Colors.green,
+                                          fontSize: 14,
+                                        ),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ),
                           ),
                         ),
                       ],
@@ -92,167 +161,64 @@ class StudentListScreen extends StatelessWidget {
                   ),
                 ),
                 SizedBox(width: 12),
-                // Botón de filtro
                 Icon(Icons.filter_list, color: Colors.grey),
               ],
             ),
           ),
-          // Lista de estudiantes
           Expanded(
-            child: ListView(
-              padding: EdgeInsets.all(12),
-              children: [
-                studentCard(
-                  name: 'Luis Mendoza',
-                  email: 'luis.mendoza@gmail.com',
-                  phone: '+1123456789',
-                  date: '15 de febrero de 2025',
-                  time: '14:30',
-                  imagePath: 'hombre',
-                ),
-                SizedBox(height: 12),
-                studentCard(
-                  name: 'Maria Lopez',
-                  email: 'mari.lopez@gmail.com',
-                  phone: '+1123457456',
-                  date: '15 de febrero de 2025',
-                  time: '15:34',
-                  imagePath: 'mujer',
-                ),
-                SizedBox(height: 12),
-                studentCard(
-                  name: 'Luis Mendoza',
-                  email: 'luis.mendoza@gmail.com',
-                  phone: '+1123456789',
-                  date: '15 de febrero de 2025',
-                  time: '14:30',
-                  imagePath: 'hombre',
-                ),
-                SizedBox(height: 12),
-                studentCard(
-                  name: 'Luis Mendoza',
-                  email: 'luis.mendoza@gmail.com',
-                  phone: '+1123456789',
-                  date: '15 de febrero de 2025',
-                  time: '14:30',
-                  imagePath: 'hombre',
-                ),
-                SizedBox(height: 12),
-                studentCard(
-                  name: 'Maria Lopez',
-                  email: 'mari.lopez@gmail.com',
-                  phone: '+1123457456',
-                  date: '15 de febrero de 2025',
-                  time: '15:34',
-                  imagePath: 'mujer',
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget studentCard({
-    required String name,
-    required String email,
-    required String phone,
-    required String date,
-    required String time,
-    required String imagePath,
-  }) {
-    return Container(
-      padding: EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 4,
-            offset: Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Información del estudiante
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Nombre y correo
-                Text(
-                  name,
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                ),
-                Text(email, style: TextStyle(color: Colors.grey, fontSize: 14)),
-                SizedBox(height: 8),
-                // Teléfono
-                Row(
-                  children: [
-                    Icon(Icons.phone, size: 16, color: Colors.grey),
-                    SizedBox(width: 6),
-                    Text(
-                      phone,
-                      style: TextStyle(
-                        color: Colors.grey.shade700,
-                        fontSize: 14,
-                      ),
+            child:
+                getFilteredStudents().isEmpty
+                    ? Center(child: Text('No se encontraron estudiantes'))
+                    : ListView.builder(
+                      padding: EdgeInsets.all(12),
+                      itemCount: getFilteredStudents().length,
+                      itemBuilder: (context, index) {
+                        final filteredStudents = getFilteredStudents();
+                        return Container(
+                          margin: EdgeInsets.only(bottom: 12),
+                          padding: EdgeInsets.all(16),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(12),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.05),
+                                blurRadius: 4,
+                                offset: Offset(0, 2),
+                              ),
+                            ],
+                          ),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      filteredStudents[index]['lastname'],
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 16,
+                                      ),
+                                    ),
+                                    SizedBox(height: 4),
+                                    Text(
+                                      'Correo: ${filteredStudents[index]['email']}',
+                                    ),
+                                    Text(
+                                      'Teléfono: ${filteredStudents[index]['phone']}',
+                                    ),
+                                    Text(
+                                      'Fecha: ${filteredStudents[index]['created_at']}',
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
                     ),
-                  ],
-                ),
-                SizedBox(height: 4),
-                // Fecha
-                Row(
-                  children: [
-                    Icon(Icons.calendar_today, size: 16, color: Colors.grey),
-                    SizedBox(width: 6),
-                    Text(
-                      date,
-                      style: TextStyle(
-                        color: Colors.grey.shade700,
-                        fontSize: 14,
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 4),
-                // Hora
-                Row(
-                  children: [
-                    Icon(Icons.access_time, size: 16, color: Colors.grey),
-                    SizedBox(width: 6),
-                    Text(
-                      time,
-                      style: TextStyle(
-                        color: Colors.grey.shade700,
-                        fontSize: 14,
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-          // Imagen de perfil
-          Container(
-            width: 50,
-            height: 50,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: Colors.grey.shade200,
-              image: DecorationImage(
-                fit: BoxFit.cover,
-                image: AssetImage(
-                  imagePath == 'hombre'
-                      ? 'assets/registro_alumno.jpg'
-                      : 'assets/registro_alumno_mujer.jpg',
-                ),
-              ),
-            ),
           ),
         ],
       ),

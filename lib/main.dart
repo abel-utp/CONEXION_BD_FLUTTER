@@ -191,6 +191,10 @@ class _LoginPageState extends State<LoginPage> {
                               controller: _usernameController,
                               decoration: InputDecoration(
                                 hintText: 'Ingresar nombre de Usuario',
+                                contentPadding: const EdgeInsets.symmetric(
+                                  horizontal: 20,
+                                  vertical: 15,
+                                ),
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(30),
                                   borderSide: BorderSide.none,
@@ -222,6 +226,10 @@ class _LoginPageState extends State<LoginPage> {
                                   !_passwordVisible, // Controla si la contraseña es visible
                               decoration: InputDecoration(
                                 hintText: 'Ingresar Contraseña',
+                                contentPadding: const EdgeInsets.symmetric(
+                                  horizontal: 20,
+                                  vertical: 15,
+                                ),
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(30),
                                   borderSide: BorderSide.none,
