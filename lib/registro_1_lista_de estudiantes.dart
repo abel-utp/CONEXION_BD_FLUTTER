@@ -220,7 +220,7 @@ class _StudentListScreenState extends State<StudentListScreen> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      filteredStudents[index]['lastname'],
+                                      filteredStudents[index]['nombre_completo'],
                                       style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 20,
@@ -256,7 +256,23 @@ class _StudentListScreenState extends State<StudentListScreen> {
                                         ),
                                         SizedBox(width: 8),
                                         Text(
-                                          '${filteredStudents[index]['created_at']}',
+                                          '${filteredStudents[index]['fecha']}',
+
+                                          style: TextStyle(fontSize: 14),
+                                        ),
+                                      ],
+                                    ),
+                                    SizedBox(height: 4),
+                                    Row(
+                                      children: [
+                                        Image.asset(
+                                          'assets/reloj.jpg',
+                                          width: 20,
+                                          height: 20,
+                                        ),
+                                        SizedBox(width: 8),
+                                        Text(
+                                          '${filteredStudents[index]['hora']}',
                                           style: TextStyle(fontSize: 14),
                                         ),
                                       ],
