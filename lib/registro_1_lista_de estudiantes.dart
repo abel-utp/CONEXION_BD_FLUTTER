@@ -62,6 +62,12 @@ class _StudentListScreenState extends State<StudentListScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color.fromARGB(
+        255,
+        242,
+        242,
+        242,
+      ), // Añadir esta línea para el color de fondo
       appBar: AppBar(
         backgroundColor: Colors.black,
 
@@ -76,7 +82,7 @@ class _StudentListScreenState extends State<StudentListScreen> {
         ),
         title: Text(
           'Lista de estudiantes',
-          style: TextStyle(color: Colors.white, fontSize: 16),
+          style: TextStyle(color: Colors.white, fontSize: 20),
         ),
         actions: [
           IconButton(
@@ -112,7 +118,11 @@ class _StudentListScreenState extends State<StudentListScreen> {
                             });
                           },
                           child: Container(
-                            padding: EdgeInsets.only(left: 8),
+                            padding: EdgeInsets.all(8),
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              border: Border.all(color: Colors.black, width: 1),
+                            ),
                             child: Icon(
                               Icons.search,
                               color: isSearching ? Colors.green : Colors.grey,
@@ -148,8 +158,13 @@ class _StudentListScreenState extends State<StudentListScreen> {
                                       child: Text(
                                         'Desarrollo Web Frontend',
                                         style: TextStyle(
-                                          color: Colors.green,
-                                          fontSize: 14,
+                                          color: const Color.fromARGB(
+                                            255,
+                                            0,
+                                            0,
+                                            0,
+                                          ),
+                                          fontSize: 18,
                                         ),
                                         textAlign: TextAlign.center,
                                       ),
@@ -161,7 +176,14 @@ class _StudentListScreenState extends State<StudentListScreen> {
                   ),
                 ),
                 SizedBox(width: 12),
-                Icon(Icons.filter_list, color: Colors.grey),
+                Container(
+                  padding: EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.black, width: 1),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Icon(Icons.filter_list, color: Colors.grey),
+                ),
               ],
             ),
           ),
@@ -176,7 +198,10 @@ class _StudentListScreenState extends State<StudentListScreen> {
                         final filteredStudents = getFilteredStudents();
                         return Container(
                           margin: EdgeInsets.only(bottom: 12),
-                          padding: EdgeInsets.all(16),
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 24,
+                            vertical: 16,
+                          ),
                           decoration: BoxDecoration(
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(12),
@@ -198,18 +223,43 @@ class _StudentListScreenState extends State<StudentListScreen> {
                                       filteredStudents[index]['lastname'],
                                       style: TextStyle(
                                         fontWeight: FontWeight.bold,
-                                        fontSize: 16,
+                                        fontSize: 20,
                                       ),
                                     ),
+                                    SizedBox(height: 1),
+                                    Text(
+                                      '${filteredStudents[index]['email']}',
+                                      style: TextStyle(fontSize: 16),
+                                    ),
+                                    SizedBox(height: 18),
+                                    Row(
+                                      children: [
+                                        Image.asset(
+                                          'assets/wsp.jpg',
+                                          width: 20,
+                                          height: 20,
+                                        ),
+                                        SizedBox(width: 8),
+                                        Text(
+                                          '+51 ${filteredStudents[index]['phone']}',
+                                          style: TextStyle(fontSize: 14),
+                                        ),
+                                      ],
+                                    ),
                                     SizedBox(height: 4),
-                                    Text(
-                                      'Correo: ${filteredStudents[index]['email']}',
-                                    ),
-                                    Text(
-                                      'Teléfono: ${filteredStudents[index]['phone']}',
-                                    ),
-                                    Text(
-                                      'Fecha: ${filteredStudents[index]['created_at']}',
+                                    Row(
+                                      children: [
+                                        Image.asset(
+                                          'assets/calendario.jpg',
+                                          width: 20,
+                                          height: 20,
+                                        ),
+                                        SizedBox(width: 8),
+                                        Text(
+                                          '${filteredStudents[index]['created_at']}',
+                                          style: TextStyle(fontSize: 14),
+                                        ),
+                                      ],
                                     ),
                                   ],
                                 ),
