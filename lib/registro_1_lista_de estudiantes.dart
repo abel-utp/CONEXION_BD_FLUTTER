@@ -257,14 +257,11 @@ class _StudentListScreenState extends State<StudentListScreen> {
                                         SizedBox(width: 8),
                                         Text(
                                           '${filteredStudents[index]['fecha']}',
-
                                           style: TextStyle(fontSize: 14),
                                         ),
-                                      ],
-                                    ),
-                                    SizedBox(height: 4),
-                                    Row(
-                                      children: [
+                                        SizedBox(
+                                          width: 16,
+                                        ), // Espaciado entre calendario y reloj
                                         Image.asset(
                                           'assets/reloj.jpg',
                                           width: 20,
