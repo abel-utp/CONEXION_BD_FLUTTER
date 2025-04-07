@@ -47,7 +47,7 @@ class _StudentListScreenState extends State<StudentListScreen> {
   List getFilteredStudents() {
     if (searchController.text.isEmpty) return students;
     return students.where((student) {
-      return student['lastname'].toString().toLowerCase().contains(
+      return student['nombre_completo'].toString().toLowerCase().contains(
         searchController.text.toLowerCase(),
       );
     }).toList();

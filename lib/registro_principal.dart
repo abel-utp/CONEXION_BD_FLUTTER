@@ -31,16 +31,6 @@ class MasterPromoLiderApp extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  // Imagen de perfil
-                  /* Container(
-                    width: 32,
-                    height: 32,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Colors.orange,
-                    ),
-                    child: Icon(Icons.person, color: Colors.white, size: 20),
-                  ),*/
                   CircleAvatar(
                     backgroundImage: AssetImage('assets/usuario.jpg'),
                     radius: 20,
