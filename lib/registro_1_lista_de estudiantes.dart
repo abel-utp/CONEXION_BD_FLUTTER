@@ -28,6 +28,8 @@ class _StudentListScreenState extends State<StudentListScreen> {
   List students = [];
   bool isSearching = false;
   TextEditingController searchController = TextEditingController();
+  int currentPage = 1;
+  int studentsPerPage = 6;
 
   // Función para obtener los datos desde la API
   Future<void> fetchStudents() async {
@@ -38,6 +40,12 @@ class _StudentListScreenState extends State<StudentListScreen> {
     if (response.statusCode == 200) {
       setState(() {
         students = json.decode(response.body);
+        // Ordenar la lista alfabéticamente por nombre_completo
+        students.sort(
+          (a, b) => a['nombre_completo'].toString().toLowerCase().compareTo(
+            b['nombre_completo'].toString().toLowerCase(),
+          ),
+        );
       });
     } else {
       throw Exception('Error al cargar los datos');
@@ -51,6 +59,52 @@ class _StudentListScreenState extends State<StudentListScreen> {
         searchController.text.toLowerCase(),
       );
     }).toList();
+  }
+
+  List getPaginatedStudents() {
+    final filteredStudents = getFilteredStudents();
+    final startIndex = (currentPage - 1) * studentsPerPage;
+    final endIndex = startIndex + studentsPerPage;
+
+    if (startIndex >= filteredStudents.length) return [];
+
+    return filteredStudents.sublist(
+      startIndex,
+      endIndex > filteredStudents.length ? filteredStudents.length : endIndex,
+    );
+  }
+
+  int get totalPages => (getFilteredStudents().length / studentsPerPage).ceil();
+
+  Widget _buildPageButton(String text, bool isSelected, VoidCallback onTap) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        margin: EdgeInsets.symmetric(horizontal: 4),
+        width: 35,
+        height: 35,
+        decoration: BoxDecoration(
+          color: isSelected ? Colors.black : Colors.white,
+          border: Border.all(color: Colors.black),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Center(
+          child: Text(
+            text,
+            style: TextStyle(
+              color: isSelected ? Colors.white : Colors.black,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  void changePage(int page) {
+    setState(() {
+      currentPage = page;
+    });
   }
 
   @override
@@ -188,100 +242,134 @@ class _StudentListScreenState extends State<StudentListScreen> {
             ),
           ),
           Expanded(
-            child:
-                getFilteredStudents().isEmpty
-                    ? Center(child: Text('No se encontraron estudiantes'))
-                    : ListView.builder(
-                      padding: EdgeInsets.all(12),
-                      itemCount: getFilteredStudents().length,
-                      itemBuilder: (context, index) {
-                        final filteredStudents = getFilteredStudents();
-                        return Container(
-                          margin: EdgeInsets.only(bottom: 12),
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 24,
-                            vertical: 16,
-                          ),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(12),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withOpacity(0.05),
-                                blurRadius: 4,
-                                offset: Offset(0, 2),
-                              ),
-                            ],
-                          ),
-                          child: Row(
-                            children: [
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      filteredStudents[index]['nombre_completo'],
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 20,
-                                      ),
-                                    ),
-                                    SizedBox(height: 1),
-                                    Text(
-                                      '${filteredStudents[index]['email']}',
-                                      style: TextStyle(fontSize: 16),
-                                    ),
-                                    SizedBox(height: 18),
-                                    Row(
-                                      children: [
-                                        Image.asset(
-                                          'assets/wsp.jpg',
-                                          width: 20,
-                                          height: 20,
-                                        ),
-                                        SizedBox(width: 8),
-                                        Text(
-                                          '+51 ${filteredStudents[index]['phone']}',
-                                          style: TextStyle(fontSize: 14),
-                                        ),
-                                      ],
-                                    ),
-                                    SizedBox(height: 4),
-                                    Row(
-                                      children: [
-                                        Image.asset(
-                                          'assets/calendario.jpg',
-                                          width: 20,
-                                          height: 20,
-                                        ),
-                                        SizedBox(width: 8),
-                                        Text(
-                                          '${filteredStudents[index]['fecha']}',
-                                          style: TextStyle(fontSize: 14),
-                                        ),
-                                        SizedBox(
-                                          width: 16,
-                                        ), // Espaciado entre calendario y reloj
-                                        Image.asset(
-                                          'assets/reloj.jpg',
-                                          width: 20,
-                                          height: 20,
-                                        ),
-                                        SizedBox(width: 8),
-                                        Text(
-                                          '${filteredStudents[index]['hora']}',
-                                          style: TextStyle(fontSize: 14),
-                                        ),
-                                      ],
+            child: Column(
+              children: [
+                Expanded(
+                  child:
+                      getPaginatedStudents().isEmpty
+                          ? Center(child: Text('No se encontraron estudiantes'))
+                          : ListView.builder(
+                            padding: EdgeInsets.all(12),
+                            itemCount: getPaginatedStudents().length,
+                            itemBuilder: (context, index) {
+                              final paginatedStudents = getPaginatedStudents();
+                              return Container(
+                                margin: EdgeInsets.only(bottom: 12),
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: 24,
+                                  vertical: 16,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(12),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withOpacity(0.05),
+                                      blurRadius: 4,
+                                      offset: Offset(0, 2),
                                     ),
                                   ],
                                 ),
-                              ),
-                            ],
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            paginatedStudents[index]['nombre_completo'],
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 20,
+                                            ),
+                                          ),
+                                          SizedBox(height: 1),
+                                          Text(
+                                            '${paginatedStudents[index]['email']}',
+                                            style: TextStyle(fontSize: 16),
+                                          ),
+                                          SizedBox(height: 18),
+                                          Row(
+                                            children: [
+                                              Image.asset(
+                                                'assets/wsp.jpg',
+                                                width: 20,
+                                                height: 20,
+                                              ),
+                                              SizedBox(width: 8),
+                                              Text(
+                                                '+51 ${paginatedStudents[index]['phone']}',
+                                                style: TextStyle(fontSize: 14),
+                                              ),
+                                            ],
+                                          ),
+                                          SizedBox(height: 4),
+                                          Row(
+                                            children: [
+                                              Image.asset(
+                                                'assets/calendario.jpg',
+                                                width: 20,
+                                                height: 20,
+                                              ),
+                                              SizedBox(width: 8),
+                                              Text(
+                                                '${paginatedStudents[index]['fecha']}',
+                                                style: TextStyle(fontSize: 14),
+                                              ),
+                                              SizedBox(
+                                                width: 16,
+                                              ), // Espaciado entre calendario y reloj
+                                              Image.asset(
+                                                'assets/reloj.jpg',
+                                                width: 20,
+                                                height: 20,
+                                              ),
+                                              SizedBox(width: 8),
+                                              Text(
+                                                '${paginatedStudents[index]['hora']}',
+                                                style: TextStyle(fontSize: 14),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
                           ),
-                        );
-                      },
+                ),
+                if (getFilteredStudents().length > studentsPerPage)
+                  Padding(
+                    padding: const EdgeInsets.all(24.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        if (currentPage > 1)
+                          _buildPageButton(
+                            '<',
+                            false,
+                            () => changePage(currentPage - 1),
+                          ),
+                        for (int i = 1; i <= totalPages; i++)
+                          _buildPageButton(
+                            '$i',
+                            currentPage == i,
+                            () => changePage(i),
+                          ),
+                        if (currentPage < totalPages)
+                          _buildPageButton(
+                            '>',
+                            false,
+                            () => changePage(currentPage + 1),
+                          ),
+                      ],
                     ),
+                  ),
+              ],
+            ),
           ),
         ],
       ),

@@ -9,7 +9,6 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
-  // Este es el widget raíz de la aplicación
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -19,7 +18,7 @@ class MyApp extends StatelessWidget {
         scaffoldBackgroundColor: const Color.fromARGB(255, 255, 255, 255),
       ),
       home: const PromoHomePage(),
-      debugShowCheckedModeBanner: false, // Quita el banner de debug
+      debugShowCheckedModeBanner: false,
     );
   }
 }
@@ -36,6 +35,25 @@ class _PromoHomePageState extends State<PromoHomePage> {
   List<Map<String, dynamic>> filteredCourses = [];
   bool isLoading = true;
   String? selectedTeacher;
+  static const int itemsPerPage = 6;
+  int currentPage = 1;
+
+  int get totalPages => (filteredCourses.length / itemsPerPage).ceil();
+
+  List<Map<String, dynamic>> get paginatedCourses {
+    final startIndex = (currentPage - 1) * itemsPerPage;
+    final endIndex = startIndex + itemsPerPage;
+    return filteredCourses.sublist(
+      startIndex,
+      endIndex > filteredCourses.length ? filteredCourses.length : endIndex,
+    );
+  }
+
+  void changePage(int page) {
+    setState(() {
+      currentPage = page;
+    });
+  }
 
   @override
   void initState() {
@@ -87,36 +105,28 @@ class _PromoHomePageState extends State<PromoHomePage> {
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(221, 15, 15, 15),
         elevation: 0,
-
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () {},
         ),
-
         title: Center(
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              // Logo de usuario dentro de un círculo
               CircleAvatar(
                 backgroundImage: AssetImage('assets/usuario.jpg'),
                 radius: 20,
               ),
-              SizedBox(
-                width: 30,
-              ), // Espacio entre el logo de usuario y el logo de Promolider
-              // Logo de Promolider
+              SizedBox(width: 30),
               Image.asset('assets/promolider_logo.png', width: 140),
             ],
           ),
         ),
         actions: [
-          // Icono de búsqueda
           IconButton(
             icon: Icon(Icons.search, color: Colors.white),
             onPressed: () {},
           ),
-          // Icono de menú
           IconButton(
             icon: Icon(Icons.menu, color: Colors.white),
             onPressed: () {},
@@ -127,7 +137,6 @@ class _PromoHomePageState extends State<PromoHomePage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Sección de categorías
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: Row(
@@ -149,128 +158,124 @@ class _PromoHomePageState extends State<PromoHomePage> {
                 ],
               ),
             ),
-
-            // Horizontal Divider
             Divider(color: Colors.grey[300], height: 15, thickness: 1),
-
             SizedBox(height: 2),
-
-            // Lista horizontal de categorías
             SizedBox(
-              height: 70,
+              height: 60,
               width: double.infinity,
               child: ListView(
                 scrollDirection: Axis.horizontal,
-                padding: EdgeInsets.symmetric(horizontal: 16),
+                padding: EdgeInsets.symmetric(horizontal: 8),
                 children: [
                   _buildCategoryItem(
                     'assets/web_icon.jpg',
                     'Desarrollo Web',
                     Colors.orange,
                   ),
-                  SizedBox(width: 16),
+
+                  SizedBox(width: 8),
                   _buildCategoryItem(
                     'assets/business_icon.jpg',
                     'Negocio',
                     Colors.green,
                   ),
-                  SizedBox(width: 16),
+                  SizedBox(width: 8),
                   _buildCategoryItem(
                     'assets/personal_icon.jpg',
                     'Desarrollo Personal',
                     const Color.fromARGB(255, 160, 142, 163),
                   ),
-                  SizedBox(width: 16),
+                  SizedBox(width: 8),
                   _buildCategoryItem(
                     'assets/design_icon.jpg',
                     'Diseño',
                     Colors.pink,
                   ),
-                  SizedBox(width: 16),
+                  SizedBox(width: 8),
                   _buildCategoryItem(
                     'assets/marketing_icon.jpg',
                     'Marketing',
                     Colors.red,
                   ),
-                  SizedBox(width: 16),
+                  SizedBox(width: 8),
                   _buildCategoryItem(
                     'assets/lifestyle_icon.jpg',
                     'Estilo de vida',
                     Colors.teal,
                   ),
-                  SizedBox(width: 16),
+                  SizedBox(width: 8),
                   _buildCategoryItem(
                     'assets/health_icon.jpg',
                     'Salud y Fitness',
                     Colors.lightBlue,
                   ),
-                  SizedBox(width: 16),
+                  SizedBox(width: 8),
                   _buildCategoryItem(
                     'assets/teaching_icon.jpg',
                     'Enseñanza y academia',
                     Colors.amber,
                   ),
-                  SizedBox(width: 16),
+                  SizedBox(width: 8),
                   _buildCategoryItem(
                     'assets/mobile_icon.jpg',
                     'Aplicaciones Móviles',
                     Colors.indigo,
                   ),
-                  SizedBox(width: 16),
+                  SizedBox(width: 8),
                   _buildCategoryItem(
                     'assets/programming_icon.jpg',
                     'Lenguajes de Programación',
                     Colors.deepPurple,
                   ),
-                  SizedBox(width: 16),
+                  SizedBox(width: 8),
                   _buildCategoryItem(
                     'assets/games_icon.jpg',
                     'Desarrollo de juegos',
                     Colors.brown,
                   ),
-                  SizedBox(width: 16),
+                  SizedBox(width: 8),
                   _buildCategoryItem(
                     'assets/finance_icon.jpg',
                     'Finanzas',
                     Colors.green,
                   ),
-                  SizedBox(width: 16),
+                  SizedBox(width: 8),
                   _buildCategoryItem(
                     'assets/communications_icon.jpg',
                     'Comunicaciones',
                     Colors.orange,
                   ),
-                  SizedBox(width: 16),
+                  SizedBox(width: 8),
                   _buildCategoryItem(
                     'assets/strategy_icon.jpg',
                     'Estrategia',
                     Colors.blue,
                   ),
-                  SizedBox(width: 16),
+                  SizedBox(width: 8),
                   _buildCategoryItem(
                     'assets/project_icon.jpg',
                     'Gestión de proyectos',
                     Colors.purple,
                   ),
-                  SizedBox(width: 16),
+                  SizedBox(width: 8),
                   _buildCategoryItem(
                     'assets/law_icon.jpg',
                     'Derecho Mercantil',
                     Colors.blueGrey,
                   ),
-                  SizedBox(width: 16),
+                  SizedBox(width: 8),
                   _buildCategoryItem(
                     'assets/transformation_icon.jpg',
                     'Transformación Personal',
                     Colors.deepOrange,
                   ),
-                  SizedBox(width: 16),
+                  SizedBox(width: 8),
                   _buildCategoryItem(
                     'assets/leadership_icon.jpg',
                     'Liderazgo',
                     Colors.red,
                   ),
-                  SizedBox(width: 16),
+                  SizedBox(width: 8),
                   _buildCategoryItem(
                     'assets/webdesign_icon.jpg',
                     'Diseño Web',
@@ -279,27 +284,24 @@ class _PromoHomePageState extends State<PromoHomePage> {
                 ],
               ),
             ),
-
             SizedBox(height: 26),
-
-            // Grid de cursos
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              padding: const EdgeInsets.symmetric(horizontal: 26.0),
               child:
                   isLoading
                       ? Center(child: CircularProgressIndicator())
                       : GridView.builder(
                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 2,
-                          mainAxisSpacing: 16,
-                          crossAxisSpacing: 16,
+                          mainAxisSpacing: 20,
+                          crossAxisSpacing: 20,
                           childAspectRatio: 0.75,
                         ),
                         shrinkWrap: true,
                         physics: NeverScrollableScrollPhysics(),
-                        itemCount: filteredCourses.length,
+                        itemCount: paginatedCourses.length,
                         itemBuilder: (context, index) {
-                          final course = filteredCourses[index];
+                          final course = paginatedCourses[index];
                           return GestureDetector(
                             onTap: () {},
                             child: _buildCourseCard(
@@ -312,67 +314,74 @@ class _PromoHomePageState extends State<PromoHomePage> {
                         },
                       ),
             ),
-
-            // Paginación
-            Padding(
-              padding: const EdgeInsets.all(24.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  _buildPageButton('<', false),
-                  _buildPageButton('1', true),
-                  _buildPageButton('2', false),
-                  _buildPageButton('3', false),
-                  _buildPageButton('4', false),
-                  _buildPageButton('5', false),
-                  Text(' ... '),
-                  _buildPageButton('5', false),
-                  _buildPageButton('>', false),
-                ],
+            if (!isLoading && totalPages > 0)
+              Padding(
+                padding: const EdgeInsets.all(24.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    if (currentPage > 1)
+                      _buildPageButton(
+                        '<',
+                        false,
+                        () => changePage(currentPage - 1),
+                      ),
+                    for (int i = 1; i <= totalPages; i++)
+                      _buildPageButton(
+                        '$i',
+                        currentPage == i,
+                        () => changePage(i),
+                      ),
+                    if (currentPage < totalPages)
+                      _buildPageButton(
+                        '>',
+                        false,
+                        () => changePage(currentPage + 1),
+                      ),
+                  ],
+                ),
               ),
-            ),
           ],
         ),
       ),
     );
   }
 
-  // Método para construir los elementos de categoría
   Widget _buildCategoryItem(String imagePath, String title, Color color) {
     final bool isSelected = selectedTeacher == title;
     return GestureDetector(
       onTap: () => filterByTeacher(title),
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 12, vertical: 20),
+        padding: EdgeInsets.symmetric(horizontal: 8, vertical: 10),
         decoration: BoxDecoration(
-          color: isSelected ? color.withOpacity(0.2) : Colors.white,
-          borderRadius: BorderRadius.circular(30),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withOpacity(0.2),
-              spreadRadius: 1,
-              blurRadius: 3,
-              offset: Offset(0, 2),
-            ),
-          ],
+          color: isSelected ? color.withOpacity(0.1) : Colors.white,
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(
+            color: const Color.fromARGB(255, 245, 245, 245)!,
+            width: 1,
+          ),
         ),
         child: Row(
+          mainAxisSize: MainAxisSize.min,
           children: [
             Container(
-              width: 50,
-              height: 50,
+              width: 40,
+              height: 40,
               decoration: BoxDecoration(color: color, shape: BoxShape.circle),
               child: ClipOval(child: Image.asset(imagePath, fit: BoxFit.cover)),
             ),
-            SizedBox(width: 8),
-            Text(title, style: TextStyle(fontSize: 12)),
+            SizedBox(width: 6),
+            Text(
+              title,
+              style: TextStyle(fontSize: 11),
+              overflow: TextOverflow.ellipsis,
+            ),
           ],
         ),
       ),
     );
   }
 
-  // Método para construir las tarjetas de cursos
   Widget _buildCourseCard(
     String title,
     String author,
@@ -385,7 +394,7 @@ class _PromoHomePageState extends State<PromoHomePage> {
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.8),
+            color: Colors.grey.withOpacity(0.5),
             spreadRadius: 1,
             blurRadius: 3,
             offset: Offset(0, 2),
@@ -395,7 +404,6 @@ class _PromoHomePageState extends State<PromoHomePage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Imagen del curso con letra de categoría
           Stack(
             children: [
               Container(
@@ -408,15 +416,13 @@ class _PromoHomePageState extends State<PromoHomePage> {
                     topRight: Radius.circular(10),
                   ),
                   image: DecorationImage(
-                    image: AssetImage(imagePath), // Usar el nuevo parámetro
+                    image: AssetImage(imagePath),
                     fit: BoxFit.cover,
                   ),
                 ),
               ),
             ],
           ),
-
-          // Información del curso
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Column(
@@ -424,14 +430,14 @@ class _PromoHomePageState extends State<PromoHomePage> {
               children: [
                 Text(
                   title,
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                 ),
                 SizedBox(height: 4),
                 Text(
                   author,
-                  style: TextStyle(fontSize: 10, color: Colors.grey[700]),
+                  style: TextStyle(fontSize: 12, color: Colors.grey[700]),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -454,24 +460,28 @@ class _PromoHomePageState extends State<PromoHomePage> {
     );
   }
 
-  // Método para construir los botones de paginación
-  Widget _buildPageButton(String text, bool isActive) {
-    return Container(
-      margin: EdgeInsets.symmetric(horizontal: 4),
-      width: 24,
-      height: 24,
-      decoration: BoxDecoration(
-        color:
-            isActive ? const Color.fromRGBO(32, 35, 41, 1) : Colors.transparent,
-        border: Border.all(color: isActive ? Colors.green : Colors.grey),
-        borderRadius: BorderRadius.circular(4),
-      ),
-      child: Center(
-        child: Text(
-          text,
-          style: TextStyle(
-            color: isActive ? Colors.white : Colors.grey,
-            fontSize: 12,
+  Widget _buildPageButton(String text, bool isActive, VoidCallback onTap) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        margin: EdgeInsets.symmetric(horizontal: 4),
+        width: 24,
+        height: 24,
+        decoration: BoxDecoration(
+          color:
+              isActive
+                  ? const Color.fromRGBO(32, 35, 41, 1)
+                  : Colors.transparent,
+          border: Border.all(color: isActive ? Colors.green : Colors.grey),
+          borderRadius: BorderRadius.circular(4),
+        ),
+        child: Center(
+          child: Text(
+            text,
+            style: TextStyle(
+              color: isActive ? Colors.white : Colors.grey,
+              fontSize: 12,
+            ),
           ),
         ),
       ),
