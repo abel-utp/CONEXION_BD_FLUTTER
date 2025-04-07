@@ -33,7 +33,9 @@ class PromoHomePage extends StatefulWidget {
 
 class _PromoHomePageState extends State<PromoHomePage> {
   List<Map<String, dynamic>> courses = [];
+  List<Map<String, dynamic>> filteredCourses = [];
   bool isLoading = true;
+  String? selectedTeacher;
 
   @override
   void initState() {
@@ -51,6 +53,7 @@ class _PromoHomePageState extends State<PromoHomePage> {
         final List<dynamic> data = json.decode(response.body);
         setState(() {
           courses = List<Map<String, dynamic>>.from(data);
+          filteredCourses = courses;
           isLoading = false;
         });
       }
@@ -58,6 +61,24 @@ class _PromoHomePageState extends State<PromoHomePage> {
       print('Error: $e');
       setState(() => isLoading = false);
     }
+  }
+
+  void filterByTeacher(String? teacher) {
+    setState(() {
+      selectedTeacher = teacher;
+      if (teacher == null) {
+        filteredCourses = courses;
+      } else {
+        filteredCourses =
+            courses
+                .where(
+                  (course) =>
+                      course['teacher']?.toString().toLowerCase() ==
+                      teacher.toLowerCase(),
+                )
+                .toList();
+      }
+    });
   }
 
   @override
@@ -116,10 +137,13 @@ class _PromoHomePageState extends State<PromoHomePage> {
                     'Categorías',
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
-                  Text(
-                    'Ver todo >',
-                    style: TextStyle(
-                      color: const Color.fromARGB(255, 41, 40, 40),
+                  GestureDetector(
+                    onTap: () => filterByTeacher(null),
+                    child: Text(
+                      'Ver todo >',
+                      style: TextStyle(
+                        color: const Color.fromARGB(255, 41, 40, 40),
+                      ),
                     ),
                   ),
                 ],
@@ -273,9 +297,9 @@ class _PromoHomePageState extends State<PromoHomePage> {
                         ),
                         shrinkWrap: true,
                         physics: NeverScrollableScrollPhysics(),
-                        itemCount: courses.length,
+                        itemCount: filteredCourses.length,
                         itemBuilder: (context, index) {
-                          final course = courses[index];
+                          final course = filteredCourses[index];
                           return GestureDetector(
                             onTap: () {},
                             child: _buildCourseCard(
@@ -315,31 +339,35 @@ class _PromoHomePageState extends State<PromoHomePage> {
 
   // Método para construir los elementos de categoría
   Widget _buildCategoryItem(String imagePath, String title, Color color) {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 12, vertical: 20),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(30),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.2),
-            spreadRadius: 1,
-            blurRadius: 3,
-            offset: Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Row(
-        children: [
-          Container(
-            width: 50,
-            height: 50,
-            decoration: BoxDecoration(color: color, shape: BoxShape.circle),
-            child: ClipOval(child: Image.asset(imagePath, fit: BoxFit.cover)),
-          ),
-          SizedBox(width: 8),
-          Text(title, style: TextStyle(fontSize: 12)),
-        ],
+    final bool isSelected = selectedTeacher == title;
+    return GestureDetector(
+      onTap: () => filterByTeacher(title),
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 12, vertical: 20),
+        decoration: BoxDecoration(
+          color: isSelected ? color.withOpacity(0.2) : Colors.white,
+          borderRadius: BorderRadius.circular(30),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.2),
+              spreadRadius: 1,
+              blurRadius: 3,
+              offset: Offset(0, 2),
+            ),
+          ],
+        ),
+        child: Row(
+          children: [
+            Container(
+              width: 50,
+              height: 50,
+              decoration: BoxDecoration(color: color, shape: BoxShape.circle),
+              child: ClipOval(child: Image.asset(imagePath, fit: BoxFit.cover)),
+            ),
+            SizedBox(width: 8),
+            Text(title, style: TextStyle(fontSize: 12)),
+          ],
+        ),
       ),
     );
   }
