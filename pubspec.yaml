@@ -41,19 +41,33 @@ flutter:
     - assets/2.jpg
     - assets/3.jpg
     - assets/4.jpg
-    - assets/audio_icon.jpg
     - assets/background.jpg
-    - assets/bd_icon.jpg
-    - assets/curso_market_1.jpg
-    - assets/curso_market.jpg
-    - assets/programacion_icon.jpg
     - assets/prueba_modelo.jpg
     - assets/recaptcha.png
-    - assets/redes_icon.jpg
     - assets/registro_alumno_mujer.jpg
     - assets/registro_alumno.jpg
     - assets/usuario.jpg
     - assets/wsp.jpg
     - assets/calendario.jpg
     - assets/reloj.jpg
+    - assets/web_icon.jpg
+    - assets/business_icon.jpg
+    - assets/personal_icon.jpg
+    - assets/design_icon.jpg
+    - assets/marketing_icon.jpg
+    - assets/lifestyle_icon.jpg
+    - assets/health_icon.jpg
+    - assets/teaching_icon.jpg
+    - assets/mobile_icon.jpg
+    - assets/programming_icon.jpg
+    - assets/games_icon.jpg
+    - assets/finance_icon.jpg
+    - assets/communications_icon.jpg
+    - assets/strategy_icon.jpg
+    - assets/project_icon.jpg
+    - assets/law_icon.jpg
+    - assets/transformation_icon.jpg
+    - assets/leadership_icon.jpg
+    - assets/webdesign_icon.jpg
+  
 

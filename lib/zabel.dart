@@ -127,40 +127,130 @@ class _PromoHomePageState extends State<PromoHomePage> {
             ),
 
             // Horizontal Divider
-            Divider(color: Colors.grey[300], height: 24, thickness: 1),
+            Divider(color: Colors.grey[300], height: 15, thickness: 1),
 
-            SizedBox(height: 6),
+            SizedBox(height: 2),
 
             // Lista horizontal de categorías
             SizedBox(
-              height: 80,
+              height: 70,
               width: double.infinity,
               child: ListView(
                 scrollDirection: Axis.horizontal,
                 padding: EdgeInsets.symmetric(horizontal: 16),
                 children: [
                   _buildCategoryItem(
-                    'assets/bd_icon.jpg',
-                    'Base de Datos',
+                    'assets/web_icon.jpg',
+                    'Desarrollo Web',
+                    Colors.orange,
+                  ),
+                  SizedBox(width: 16),
+                  _buildCategoryItem(
+                    'assets/business_icon.jpg',
+                    'Negocio',
+                    Colors.green,
+                  ),
+                  SizedBox(width: 16),
+                  _buildCategoryItem(
+                    'assets/personal_icon.jpg',
+                    'Desarrollo Personal',
+                    const Color.fromARGB(255, 160, 142, 163),
+                  ),
+                  SizedBox(width: 16),
+                  _buildCategoryItem(
+                    'assets/design_icon.jpg',
+                    'Diseño',
+                    Colors.pink,
+                  ),
+                  SizedBox(width: 16),
+                  _buildCategoryItem(
+                    'assets/marketing_icon.jpg',
+                    'Marketing',
+                    Colors.red,
+                  ),
+                  SizedBox(width: 16),
+                  _buildCategoryItem(
+                    'assets/lifestyle_icon.jpg',
+                    'Estilo de vida',
+                    Colors.teal,
+                  ),
+                  SizedBox(width: 16),
+                  _buildCategoryItem(
+                    'assets/health_icon.jpg',
+                    'Salud y Fitness',
+                    Colors.lightBlue,
+                  ),
+                  SizedBox(width: 16),
+                  _buildCategoryItem(
+                    'assets/teaching_icon.jpg',
+                    'Enseñanza y academia',
+                    Colors.amber,
+                  ),
+                  SizedBox(width: 16),
+                  _buildCategoryItem(
+                    'assets/mobile_icon.jpg',
+                    'Aplicaciones Móviles',
+                    Colors.indigo,
+                  ),
+                  SizedBox(width: 16),
+                  _buildCategoryItem(
+                    'assets/programming_icon.jpg',
+                    'Lenguajes de Programación',
+                    Colors.deepPurple,
+                  ),
+                  SizedBox(width: 16),
+                  _buildCategoryItem(
+                    'assets/games_icon.jpg',
+                    'Desarrollo de juegos',
+                    Colors.brown,
+                  ),
+                  SizedBox(width: 16),
+                  _buildCategoryItem(
+                    'assets/finance_icon.jpg',
+                    'Finanzas',
+                    Colors.green,
+                  ),
+                  SizedBox(width: 16),
+                  _buildCategoryItem(
+                    'assets/communications_icon.jpg',
+                    'Comunicaciones',
+                    Colors.orange,
+                  ),
+                  SizedBox(width: 16),
+                  _buildCategoryItem(
+                    'assets/strategy_icon.jpg',
+                    'Estrategia',
                     Colors.blue,
                   ),
                   SizedBox(width: 16),
                   _buildCategoryItem(
-                    'assets/redes_icon.jpg',
-                    'Redes',
-                    Colors.blue,
-                  ),
-                  SizedBox(width: 16),
-                  _buildCategoryItem(
-                    'assets/programacion_icon.jpg',
-                    'Programación',
+                    'assets/project_icon.jpg',
+                    'Gestión de proyectos',
                     Colors.purple,
                   ),
                   SizedBox(width: 16),
                   _buildCategoryItem(
-                    'assets/audio_icon.jpg',
-                    'Audio',
-                    Colors.white,
+                    'assets/law_icon.jpg',
+                    'Derecho Mercantil',
+                    Colors.blueGrey,
+                  ),
+                  SizedBox(width: 16),
+                  _buildCategoryItem(
+                    'assets/transformation_icon.jpg',
+                    'Transformación Personal',
+                    Colors.deepOrange,
+                  ),
+                  SizedBox(width: 16),
+                  _buildCategoryItem(
+                    'assets/leadership_icon.jpg',
+                    'Liderazgo',
+                    Colors.red,
+                  ),
+                  SizedBox(width: 16),
+                  _buildCategoryItem(
+                    'assets/webdesign_icon.jpg',
+                    'Diseño Web',
+                    Colors.cyan,
                   ),
                 ],
               ),
@@ -295,25 +385,6 @@ class _PromoHomePageState extends State<PromoHomePage> {
                   ),
                 ),
               ),
-              Positioned(
-                bottom: 10,
-                right: 10,
-                child: Container(
-                  padding: EdgeInsets.all(6),
-                  decoration: BoxDecoration(
-                    color: const Color.fromARGB(255, 39, 37, 37),
-                    borderRadius: BorderRadius.circular(14),
-                  ),
-                  child: Text(
-                    '10 mayo',
-                    style: TextStyle(
-                      color: const Color.fromARGB(255, 43, 255, 0),
-                      fontSize: 12,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ),
             ],
           ),
 
@@ -336,7 +407,7 @@ class _PromoHomePageState extends State<PromoHomePage> {
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                 ),
-                SizedBox(height: 4),
+                SizedBox(height: 14),
                 Row(
                   children: [
                     Icon(Icons.access_time, size: 12, color: Colors.grey),
