@@ -13,6 +13,7 @@ dependencies:
     sdk: flutter
   cupertino_icons: ^1.0.8
   http: ^1.1.0
+  dropdown_button2: ^2.3.9
 
 dev_dependencies:
   flutter_test:
@@ -69,5 +70,5 @@ flutter:
     - assets/transformation_icon.jpg
     - assets/leadership_icon.jpg
     - assets/webdesign_icon.jpg
-  
+
 

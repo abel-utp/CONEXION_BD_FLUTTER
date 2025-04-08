@@ -37,6 +37,8 @@ class _PromoHomePageState extends State<PromoHomePage> {
   String? selectedTeacher;
   static const int itemsPerPage = 6;
   int currentPage = 1;
+  bool isSearching = false;
+  final TextEditingController searchController = TextEditingController();
 
   int get totalPages => (filteredCourses.length / itemsPerPage).ceil();
 
@@ -59,6 +61,12 @@ class _PromoHomePageState extends State<PromoHomePage> {
   void initState() {
     super.initState();
     getCourses();
+  }
+
+  @override
+  void dispose() {
+    searchController.dispose();
+    super.dispose();
   }
 
   Future<void> getCourses() async {
@@ -99,6 +107,24 @@ class _PromoHomePageState extends State<PromoHomePage> {
     });
   }
 
+  void searchCourses(String searchTerm) {
+    setState(() {
+      if (searchTerm.isEmpty) {
+        filteredCourses = courses;
+      } else {
+        filteredCourses =
+            courses
+                .where(
+                  (course) => course['title'].toString().toLowerCase().contains(
+                    searchTerm.toLowerCase(),
+                  ),
+                )
+                .toList();
+      }
+      currentPage = 1;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -109,23 +135,49 @@ class _PromoHomePageState extends State<PromoHomePage> {
           icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () {},
         ),
-        title: Center(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              CircleAvatar(
-                backgroundImage: AssetImage('assets/usuario.jpg'),
-                radius: 20,
-              ),
-              SizedBox(width: 30),
-              Image.asset('assets/promolider_logo.png', width: 140),
-            ],
-          ),
-        ),
+        title:
+            isSearching
+                ? TextField(
+                  controller: searchController,
+                  autofocus: true,
+                  style: const TextStyle(color: Colors.white),
+                  decoration: const InputDecoration(
+                    hintText: 'Buscar curso...',
+                    hintStyle: TextStyle(color: Colors.white70),
+                    border: InputBorder.none,
+                  ),
+                  onChanged: (value) => searchCourses(value),
+                )
+                : Center(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      CircleAvatar(
+                        backgroundImage: AssetImage('assets/usuario.jpg'),
+                        radius: 20,
+                      ),
+                      SizedBox(width: 30),
+                      Image.asset('assets/promolider_logo.png', width: 140),
+                    ],
+                  ),
+                ),
         actions: [
           IconButton(
-            icon: Icon(Icons.search, color: Colors.white),
-            onPressed: () {},
+            icon: Icon(
+              isSearching ? Icons.close : Icons.search,
+              color: Colors.white,
+            ),
+            onPressed: () {
+              setState(() {
+                if (isSearching) {
+                  isSearching = false;
+                  searchController.clear();
+                  searchCourses('');
+                } else {
+                  isSearching = true;
+                }
+              });
+            },
           ),
           IconButton(
             icon: Icon(Icons.menu, color: Colors.white),

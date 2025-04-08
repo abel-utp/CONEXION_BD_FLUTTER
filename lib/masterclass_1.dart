@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'menu.dart'; // Importa la clase MenuScreen
 import 'masterclass_2.dart'; // Importa la clase MasterclassScreen
 
@@ -13,14 +14,47 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(primarySwatch: Colors.green),
+      theme: ThemeData(
+        primarySwatch: Colors.green,
+        inputDecorationTheme: InputDecorationTheme(alignLabelWithHint: true),
+      ),
       home: const MasterclassCreationScreen(),
     );
   }
 }
 
-class MasterclassCreationScreen extends StatelessWidget {
+class MasterclassCreationScreen extends StatefulWidget {
   const MasterclassCreationScreen({Key? key}) : super(key: key);
+
+  @override
+  State<MasterclassCreationScreen> createState() =>
+      _MasterclassCreationScreenState();
+}
+
+class _MasterclassCreationScreenState extends State<MasterclassCreationScreen> {
+  String? selectedCategory;
+
+  final List<String> categories = [
+    'Aplicaciones Móviles',
+    'Comunicaciones',
+    'Derecho Mercantil',
+    'Desarrollo Personal',
+    'Desarrollo Web',
+    'Desarrollo de juegos',
+    'Diseño',
+    'Diseño Web',
+    'Enseñanza y academia',
+    'Estilo de vida',
+    'Estrategia',
+    'Finanzas',
+    'Gestión de proyectos',
+    'Lenguajes de Programación',
+    'Liderazgo',
+    'Marketing',
+    'Negocio',
+    'Salud y Fitness',
+    'Transformación Personal',
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -61,7 +95,6 @@ class MasterclassCreationScreen extends StatelessWidget {
           ),
         ],
       ),
-
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: SingleChildScrollView(
@@ -108,27 +141,41 @@ class MasterclassCreationScreen extends StatelessWidget {
               const Text('Categoría'),
               Container(
                 width: double.infinity,
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 10,
-                  vertical: 10,
-                ),
+                padding: const EdgeInsets.symmetric(horizontal: 10),
                 decoration: BoxDecoration(
                   border: Border.all(
                     color: const Color.fromARGB(255, 61, 61, 61),
                   ),
                   borderRadius: BorderRadius.circular(8),
                 ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Seleccionar una categoría',
-                      style: TextStyle(
-                        color: const Color.fromARGB(255, 54, 54, 54),
+                child: DropdownButtonHideUnderline(
+                  child: DropdownButton2<String>(
+                    value: selectedCategory,
+                    isExpanded: true,
+                    dropdownStyleData: DropdownStyleData(
+                      offset: const Offset(0, -5),
+                      maxHeight: 200,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
                       ),
                     ),
-                    const Icon(Icons.arrow_drop_down),
-                  ],
+                    hint: const Text(
+                      'Seleccionar una categoría',
+                      style: TextStyle(color: Color.fromARGB(255, 54, 54, 54)),
+                    ),
+                    items:
+                        categories.map((String category) {
+                          return DropdownMenuItem<String>(
+                            value: category,
+                            child: Text(category),
+                          );
+                        }).toList(),
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        selectedCategory = newValue;
+                      });
+                    },
+                  ),
                 ),
               ),
               const SizedBox(height: 15),
