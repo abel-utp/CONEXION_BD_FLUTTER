@@ -33,6 +33,8 @@ class MasterclassCreationScreen extends StatefulWidget {
 
 class _MasterclassCreationScreenState extends State<MasterclassCreationScreen> {
   String? selectedCategory;
+  DateTime? selectedDate;
+  final TextEditingController dateController = TextEditingController();
 
   final List<String> categories = [
     'Aplicaciones Móviles',
@@ -55,6 +57,34 @@ class _MasterclassCreationScreenState extends State<MasterclassCreationScreen> {
     'Salud y Fitness',
     'Transformación Personal',
   ];
+
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: selectedDate ?? DateTime.now(),
+      firstDate: DateTime.now(),
+      lastDate: DateTime(2100),
+      builder: (context, child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            colorScheme: const ColorScheme.light(
+              primary: Colors.green,
+              onPrimary: Colors.white,
+              onSurface: Colors.black,
+            ),
+          ),
+          child: child!,
+        );
+      },
+    );
+
+    if (picked != null && picked != selectedDate) {
+      setState(() {
+        selectedDate = picked;
+        dateController.text = "${picked.day}/${picked.month}/${picked.year}";
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -221,6 +251,8 @@ class _MasterclassCreationScreenState extends State<MasterclassCreationScreen> {
                       children: [
                         const Text('Fecha de Finalización'),
                         TextField(
+                          controller: dateController,
+                          readOnly: true,
                           decoration: InputDecoration(
                             hintText: 'dd/mm/yyyy',
                             hintStyle: TextStyle(
@@ -233,7 +265,12 @@ class _MasterclassCreationScreenState extends State<MasterclassCreationScreen> {
                               horizontal: 10,
                               vertical: 10,
                             ),
+                            suffixIcon: IconButton(
+                              icon: Icon(Icons.calendar_today),
+                              onPressed: () => _selectDate(context),
+                            ),
                           ),
+                          onTap: () => _selectDate(context),
                         ),
                       ],
                     ),
