@@ -35,6 +35,8 @@ class _MasterclassCreationScreenState extends State<MasterclassCreationScreen> {
   String? selectedCategory;
   DateTime? selectedDate;
   final TextEditingController dateController = TextEditingController();
+  final TextEditingController phoneController = TextEditingController();
+  bool isPhoneValid = true;
 
   final List<String> categories = [
     'Aplicaciones Móviles',
@@ -84,6 +86,17 @@ class _MasterclassCreationScreenState extends State<MasterclassCreationScreen> {
         dateController.text = "${picked.day}/${picked.month}/${picked.year}";
       });
     }
+  }
+
+  @override
+  void dispose() {
+    phoneController.dispose();
+    dateController.dispose();
+    super.dispose();
+  }
+
+  bool validatePhone(String value) {
+    return value.length == 9 && RegExp(r'^[0-9]+$').hasMatch(value);
   }
 
   @override
@@ -292,8 +305,13 @@ class _MasterclassCreationScreenState extends State<MasterclassCreationScreen> {
               const SizedBox(height: 15),
               const Text('Contacto'),
               TextField(
+                controller: phoneController,
+                keyboardType: TextInputType.number,
+                maxLength: 9,
                 decoration: InputDecoration(
-                  hintText: 'Teléfono',
+                  hintText: 'Teléfono (9 dígitos)',
+                  errorText:
+                      isPhoneValid ? null : 'Ingrese exactamente 9 dígitos',
                   hintStyle: TextStyle(
                     color: const Color.fromARGB(255, 54, 54, 54),
                   ),
@@ -304,7 +322,13 @@ class _MasterclassCreationScreenState extends State<MasterclassCreationScreen> {
                     horizontal: 10,
                     vertical: 10,
                   ),
+                  counterText: '',
                 ),
+                onChanged: (value) {
+                  setState(() {
+                    isPhoneValid = validatePhone(value);
+                  });
+                },
               ),
               const SizedBox(height: 50),
               Container(
