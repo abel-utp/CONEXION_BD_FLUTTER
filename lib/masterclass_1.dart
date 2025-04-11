@@ -224,6 +224,8 @@ class _MasterclassCreationScreenState extends State<MasterclassCreationScreen> {
               const SizedBox(height: 15),
               const Text('Descripción'),
               TextField(
+                minLines: 3,
+                maxLines: 5,
                 decoration: InputDecoration(
                   hintText: 'Descripción de la Masterclass',
                   hintStyle: TextStyle(
@@ -232,15 +234,20 @@ class _MasterclassCreationScreenState extends State<MasterclassCreationScreen> {
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  contentPadding: EdgeInsets.symmetric(
-                    horizontal: 10,
-                    vertical: 40,
+                  contentPadding: EdgeInsets.only(
+                    left: 10,
+                    top: 10,
+                    right: 10,
+                    bottom: 7,
                   ),
+                  alignLabelWithHint: false,
                 ),
               ),
               const SizedBox(height: 15),
               const Text('Objetivos'),
               TextField(
+                minLines: 3,
+                maxLines: 5,
                 decoration: InputDecoration(
                   hintText: 'Objetivos de la masterclass',
                   hintStyle: TextStyle(
@@ -249,10 +256,13 @@ class _MasterclassCreationScreenState extends State<MasterclassCreationScreen> {
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  contentPadding: EdgeInsets.symmetric(
-                    horizontal: 10,
-                    vertical: 30,
+                  contentPadding: EdgeInsets.only(
+                    left: 10,
+                    top: 10,
+                    right: 10,
+                    bottom: 7,
                   ),
+                  alignLabelWithHint: false,
                 ),
               ),
               const SizedBox(height: 15),
