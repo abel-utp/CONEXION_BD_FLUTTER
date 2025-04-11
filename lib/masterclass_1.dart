@@ -102,6 +102,7 @@ class _MasterclassCreationScreenState extends State<MasterclassCreationScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white, // Agregar esta línea
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(255, 0, 0, 0),
         elevation: 0,
@@ -371,18 +372,34 @@ class _MasterclassCreationScreenState extends State<MasterclassCreationScreen> {
                   ),
                   borderRadius: BorderRadius.circular(8),
                 ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Icon(Icons.upload_file, size: 30),
-                    const SizedBox(height: 8),
-                    const Text('Subir imagen'),
-                    const SizedBox(height: 4),
-                    Text(
-                      'de la Masterclass',
-                      style: TextStyle(color: Colors.grey[600], fontSize: 12),
-                    ),
-                  ],
+                child: InkWell(
+                  onTap: () {
+                    // Aquí puedes agregar la lógica para subir la imagen
+                  },
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Icon(Icons.upload_file, size: 30),
+                      const SizedBox(height: 8),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 20,
+                          vertical: 10,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.green,
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: const Text(
+                          'Subir imagen de la Masterclass',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
 
@@ -397,18 +414,34 @@ class _MasterclassCreationScreenState extends State<MasterclassCreationScreen> {
                   ),
                   borderRadius: BorderRadius.circular(8),
                 ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Icon(Icons.file_present, size: 30),
-                    const SizedBox(height: 8),
-                    const Text('Subir documentos'),
-                    const SizedBox(height: 4),
-                    Text(
-                      'de la Masterclass',
-                      style: TextStyle(color: Colors.grey[600], fontSize: 12),
-                    ),
-                  ],
+                child: InkWell(
+                  onTap: () {
+                    // Aquí puedes agregar la lógica para subir documentos
+                  },
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Icon(Icons.file_present, size: 30),
+                      const SizedBox(height: 8),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 20,
+                          vertical: 10,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.green,
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: const Text(
+                          'Subir documentos de la Masterclass',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
 
