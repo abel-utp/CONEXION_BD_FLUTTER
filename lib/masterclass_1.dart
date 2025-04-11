@@ -330,6 +330,26 @@ class _MasterclassCreationScreenState extends State<MasterclassCreationScreen> {
                   });
                 },
               ),
+
+              const SizedBox(height: 15),
+              const Text('Correo'),
+              TextField(
+                keyboardType: TextInputType.emailAddress,
+                decoration: InputDecoration(
+                  hintText: 'Correo electrónico',
+                  hintStyle: TextStyle(
+                    color: const Color.fromARGB(255, 54, 54, 54),
+                  ),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  contentPadding: EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 10,
+                  ),
+                ),
+              ),
+
               const SizedBox(height: 50),
               Container(
                 width: double.infinity,
