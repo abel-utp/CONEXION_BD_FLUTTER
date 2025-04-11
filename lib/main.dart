@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:prueba_lunes_17/menu.dart';
+import 'package:prueba_lunes_17/widgets/captcha_widget.dart';
+import 'package:prueba_lunes_17/widgets/captcha_dialog.dart';
 
 void main() {
   runApp(const MyApp());
@@ -40,10 +42,12 @@ class _LoginPageState extends State<LoginPage> {
 
   //ABEL-VARIABLE PARA CHECKBOXES DEL LOGIN
   bool _rememberMe = false;
-  bool _notRobot = false;
 
   //ABEL-VARIABLE PARA VISUALIZAR CONTRASEÑA
   bool _passwordVisible = false;
+
+  // Variable para validar CAPTCHA
+  bool _captchaValidated = false;
 
   // Función para validar el login
   Future<void> _login() async {
@@ -56,10 +60,26 @@ class _LoginPageState extends State<LoginPage> {
     final String username = _usernameController.text.trim();
     final String password = _passwordController.text.trim();
 
-    // Validar que los campos no estén vacíos
+    // Validar que los campos no estén vacíos y los checkboxes estén marcados
     if (username.isEmpty || password.isEmpty) {
       setState(() {
         _errorMessage = 'Por favor, complete todos los campos';
+        _isLoading = false;
+      });
+      return;
+    }
+
+    if (!_rememberMe) {
+      setState(() {
+        _errorMessage = 'Por favor, marque la casilla "Recuérdame"';
+        _isLoading = false;
+      });
+      return;
+    }
+
+    if (!_captchaValidated) {
+      setState(() {
+        _errorMessage = 'Por favor, complete el CAPTCHA correctamente';
         _isLoading = false;
       });
       return;
@@ -69,7 +89,8 @@ class _LoginPageState extends State<LoginPage> {
       // Reemplaza esta URL con la dirección IP de tu computadora donde está XAMPP
       // Asegúrate de que el archivo PHP esté en la carpeta htdocs de XAMPP
       final response = await http.post(
-        Uri.parse('http://192.168.18.125/tienda_api/login.php'),
+        //Uri.parse('http://192.168.18.125/tienda_api/login.php'),
+        Uri.parse('http://192.168.18.125/api/login.php'),
         body: {'username': username, 'password': password},
       );
 
@@ -302,7 +323,7 @@ class _LoginPageState extends State<LoginPage> {
                             ),
                             //const SizedBox(height: 16),
 
-                            // checkbox "No soy un robot"
+                            // Reemplazar el antiguo checkbox de "No soy un robot" con el nuevo CaptchaWidget
                             Padding(
                               padding: const EdgeInsets.symmetric(
                                 horizontal: 6.0,
@@ -317,11 +338,17 @@ class _LoginPageState extends State<LoginPage> {
                                   child: Row(
                                     children: [
                                       Checkbox(
-                                        value: _notRobot,
-                                        onChanged: (value) {
-                                          setState(() {
-                                            _notRobot = value ?? false;
-                                          });
+                                        value: _captchaValidated,
+                                        onChanged: (value) async {
+                                          if (!_captchaValidated) {
+                                            await CaptchaDialog.show(context, (
+                                              isValid,
+                                            ) {
+                                              setState(() {
+                                                _captchaValidated = isValid;
+                                              });
+                                            });
+                                          }
                                         },
                                         fillColor:
                                             MaterialStateProperty.resolveWith<
@@ -346,7 +373,7 @@ class _LoginPageState extends State<LoginPage> {
                                       Container(
                                         padding: const EdgeInsets.all(10),
                                         child: Image.asset(
-                                          'assets/recaptcha.png', // Asegúrate de tener esta imagen
+                                          'assets/recaptcha.png',
                                           height: 30,
                                         ),
                                       ),
