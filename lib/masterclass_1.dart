@@ -234,7 +234,7 @@ class _MasterclassCreationScreenState extends State<MasterclassCreationScreen> {
                   ),
                   contentPadding: EdgeInsets.symmetric(
                     horizontal: 10,
-                    vertical: 10,
+                    vertical: 40,
                   ),
                 ),
               ),
@@ -251,7 +251,7 @@ class _MasterclassCreationScreenState extends State<MasterclassCreationScreen> {
                   ),
                   contentPadding: EdgeInsets.symmetric(
                     horizontal: 10,
-                    vertical: 10,
+                    vertical: 30,
                   ),
                 ),
               ),
@@ -337,6 +337,76 @@ class _MasterclassCreationScreenState extends State<MasterclassCreationScreen> {
                 keyboardType: TextInputType.emailAddress,
                 decoration: InputDecoration(
                   hintText: 'Correo electrónico',
+                  hintStyle: TextStyle(
+                    color: const Color.fromARGB(255, 54, 54, 54),
+                  ),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  contentPadding: EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 10,
+                  ),
+                ),
+              ),
+
+              const SizedBox(height: 7),
+              const Text('Imagen'),
+              Container(
+                width: double.infinity,
+                height: 120,
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: const Color.fromARGB(255, 61, 61, 61),
+                  ),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Icon(Icons.upload_file, size: 30),
+                    const SizedBox(height: 8),
+                    const Text('Subir imagen'),
+                    const SizedBox(height: 4),
+                    Text(
+                      'de la Masterclass',
+                      style: TextStyle(color: Colors.grey[600], fontSize: 12),
+                    ),
+                  ],
+                ),
+              ),
+
+              const SizedBox(height: 15),
+              const Text('Documentos'),
+              Container(
+                width: double.infinity,
+                height: 120,
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: const Color.fromARGB(255, 61, 61, 61),
+                  ),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Icon(Icons.file_present, size: 30),
+                    const SizedBox(height: 8),
+                    const Text('Subir documentos'),
+                    const SizedBox(height: 4),
+                    Text(
+                      'de la Masterclass',
+                      style: TextStyle(color: Colors.grey[600], fontSize: 12),
+                    ),
+                  ],
+                ),
+              ),
+
+              const SizedBox(height: 15),
+              const Text('Enlace de la reunión'),
+              TextField(
+                decoration: InputDecoration(
+                  hintText: 'Link de la reunión',
                   hintStyle: TextStyle(
                     color: const Color.fromARGB(255, 54, 54, 54),
                   ),
