@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:prueba_lunes_17/menu.dart';
-import 'package:prueba_lunes_17/widgets/captcha_widget.dart';
+//import 'package:prueba_lunes_17/widgets/captcha_widget.dart';
 import 'package:prueba_lunes_17/widgets/captcha_dialog.dart';
 
 void main() {
