@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'menu.dart'; // Importa la clase MenuScreen
 import 'masterclass_2.dart'; // Importa la clase MasterclassScreen
+import 'package:image_picker/image_picker.dart';
+import 'dart:io';
 
 void main() {
   runApp(const MyApp());
@@ -37,6 +39,8 @@ class _MasterclassCreationScreenState extends State<MasterclassCreationScreen> {
   final TextEditingController dateController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
   bool isPhoneValid = true;
+  File? _imageFile;
+  final ImagePicker _picker = ImagePicker();
 
   final List<String> categories = [
     'Aplicaciones Móviles',
@@ -85,6 +89,23 @@ class _MasterclassCreationScreenState extends State<MasterclassCreationScreen> {
         selectedDate = picked;
         dateController.text = "${picked.day}/${picked.month}/${picked.year}";
       });
+    }
+  }
+
+  Future<void> _pickImage() async {
+    try {
+      final XFile? pickedFile = await _picker.pickImage(
+        source: ImageSource.gallery,
+        imageQuality: 80,
+      );
+
+      if (pickedFile != null) {
+        setState(() {
+          _imageFile = File(pickedFile.path);
+        });
+      }
+    } catch (e) {
+      print('Error al seleccionar imagen: $e');
     }
   }
 
@@ -373,33 +394,54 @@ class _MasterclassCreationScreenState extends State<MasterclassCreationScreen> {
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: InkWell(
-                  onTap: () {
-                    // Aquí puedes agregar la lógica para subir la imagen
-                  },
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Icon(Icons.upload_file, size: 30),
-                      const SizedBox(height: 8),
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 20,
-                          vertical: 10,
-                        ),
-                        decoration: BoxDecoration(
-                          color: Colors.green,
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        child: const Text(
-                          'Subir imagen de la Masterclass',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
+                  onTap: _pickImage,
+                  child:
+                      _imageFile != null
+                          ? Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(8),
+                              image: DecorationImage(
+                                image: FileImage(_imageFile!),
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                            child: Container(
+                              color: Colors.black.withOpacity(0.3),
+                              child: const Center(
+                                child: Text(
+                                  'Cambiar imagen',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          )
+                          : Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Icon(Icons.upload_file, size: 30),
+                              const SizedBox(height: 8),
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 20,
+                                  vertical: 10,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: Colors.green,
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                child: const Text(
+                                  'Subir imagen de la Masterclass',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
-                        ),
-                      ),
-                    ],
-                  ),
                 ),
               ),
 
@@ -481,11 +523,14 @@ class _MasterclassCreationScreenState extends State<MasterclassCreationScreen> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(25),
                       side: BorderSide(
-                        color: const Color.fromARGB(255, 2, 253, 11),
+                        color: const Color.fromARGB(255, 25, 252, 0),
                       ), // Añade esta línea para el borde verde
                     ),
                   ),
-                  child: const Text('Guardar', style: TextStyle(fontSize: 16)),
+                  child: const Text(
+                    'Guardar',
+                    style: TextStyle(fontSize: 16, color: Colors.black),
+                  ),
                 ),
               ),
             ],
