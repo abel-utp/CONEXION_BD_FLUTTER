@@ -45,6 +45,9 @@ class _MainScreenState extends State<MainScreen> {
   // Variable para controlar qué opción del menú está seleccionada
   int _selectedIndex = 0;
 
+  // Variable para controlar el estado de expansión
+  bool _isExpanded = false;
+
   // Lista de títulos para el contenido principal
   final List<String> _titles = [
     'Dashboards',
@@ -68,6 +71,8 @@ class _MainScreenState extends State<MainScreen> {
       appBar: AppBar(
         backgroundColor: Colors.black,
         title: Text(_titles[_selectedIndex]),
+        // Agregar el color blanco al icono del menú
+        iconTheme: const IconThemeData(color: Colors.white),
       ),
       // Menú lateral (Drawer)
       drawer: Drawer(
@@ -94,66 +99,83 @@ class _MainScreenState extends State<MainScreen> {
                 icon: Icons.dashboard,
                 title: 'Dashboards',
                 index: 0,
+                iconColor:
+                    Colors
+                        .white, // Agregar el color blanco específicamente para este ícono
               ),
 
-              // Opción desplegable de Aula Virtual
+              // Modificar el ExpansionTile
               ExpansionTile(
-                leading: const Icon(Icons.computer, color: Colors.white),
+                leading: Icon(
+                  _isExpanded ? Icons.folder_open : Icons.folder,
+                  color: Colors.white,
+                ),
                 title: const Text(
                   'Aula Virtual',
                   style: TextStyle(color: Colors.white),
                 ),
-                trailing: const Icon(
-                  Icons.arrow_drop_down,
+                trailing: Icon(
+                  _isExpanded ? Icons.arrow_drop_up : Icons.arrow_drop_down,
                   color: Colors.white,
                 ),
+                onExpansionChanged: (expanded) {
+                  setState(() {
+                    _isExpanded = expanded;
+                  });
+                },
                 children: [
-                  // Aquí puedes agregar sub-opciones de Aula Virtual si lo necesitas
+                  ListTile(
+                    contentPadding: const EdgeInsets.only(left: 16),
+                    leading: const Icon(Icons.school, color: Colors.white),
+                    title: const Text(
+                      'Masterclass',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => MasterclassCreationScreen(),
+                        ),
+                      );
+                    },
+                  ),
+                  ListTile(
+                    contentPadding: const EdgeInsets.only(left: 16),
+                    leading: const Icon(
+                      Icons.shopping_cart,
+                      color: Colors.white,
+                    ),
+                    title: const Text(
+                      'Marketplace',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const PromoHomePage(),
+                        ),
+                      );
+                    },
+                  ),
+                  ListTile(
+                    contentPadding: const EdgeInsets.only(left: 16),
+                    leading: const Icon(Icons.assignment, color: Colors.white),
+                    title: const Text(
+                      'Registros',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => MasterPromoLiderApp(),
+                        ),
+                      );
+                    },
+                  ),
                 ],
-              ),
-
-              _buildMenuItem(
-                icon: Icons.school,
-                title: 'Masterclass',
-                index: 2,
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => MasterclassCreationScreen(),
-                    ),
-                  );
-                },
-              ),
-
-              ListTile(
-                leading: const Icon(Icons.shopping_cart, color: Colors.white),
-                title: const Text(
-                  'Marketplace',
-                  style: TextStyle(color: Colors.white),
-                ),
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const PromoHomePage(),
-                    ),
-                  );
-                },
-              ),
-
-              _buildMenuItem(
-                icon: Icons.assignment,
-                title: 'Registros',
-                index: 4,
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => MasterPromoLiderApp(),
-                    ),
-                  );
-                },
               ),
 
               const Spacer(), // Espacio flexible para empujar el botón de cerrar sesión al fondo
@@ -192,10 +214,25 @@ class _MainScreenState extends State<MainScreen> {
 
       // Contenido principal (aquí iría el contenido de cada sección)
       body: Center(
-        child: Text(
-          'Contenido de ${_titles[_selectedIndex]}',
-          style: const TextStyle(fontSize: 24),
-        ),
+        child:
+            _selectedIndex == 0
+                ? Container(
+                  decoration: BoxDecoration(
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.5),
+                        spreadRadius: 2,
+                        blurRadius: 17,
+                        offset: const Offset(0, 3),
+                      ),
+                    ],
+                  ),
+                  child: Image.asset('assets/promolider_logo.png', width: 300),
+                )
+                : Text(
+                  'Contenido de ${_titles[_selectedIndex]}',
+                  style: const TextStyle(fontSize: 24),
+                ),
       ),
     );
   }
@@ -205,13 +242,17 @@ class _MainScreenState extends State<MainScreen> {
     required IconData icon,
     required String title,
     required int index,
+    Color iconColor = Colors.white, // Agregar parámetro para el color del ícono
     VoidCallback? onTap,
   }) {
     bool isSelected = _selectedIndex == index;
 
     return ListTile(
-      leading: Icon(icon, color: Colors.white),
-      title: Text(title, style: const TextStyle(color: Colors.white)),
+      leading: Icon(icon, color: iconColor),
+      title: Text(
+        title,
+        style: const TextStyle(color: Colors.white, fontSize: 16),
+      ),
       // Cambia el color de fondo si está seleccionado
       tileColor: isSelected ? Colors.green.withOpacity(0.3) : null,
       onTap:

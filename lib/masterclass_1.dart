@@ -4,6 +4,8 @@ import 'menu.dart'; // Importa la clase MenuScreen
 import 'masterclass_2.dart'; // Importa la clase MasterclassScreen
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 void main() {
   runApp(const MyApp());
@@ -38,6 +40,11 @@ class _MasterclassCreationScreenState extends State<MasterclassCreationScreen> {
   DateTime? selectedDate;
   final TextEditingController dateController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
+  final TextEditingController tituloController = TextEditingController();
+  final TextEditingController descripcionController = TextEditingController();
+  final TextEditingController objetivosController = TextEditingController();
+  final TextEditingController correoController = TextEditingController();
+  final TextEditingController enlaceController = TextEditingController();
   bool isPhoneValid = true;
   File? _imageFile;
   final ImagePicker _picker = ImagePicker();
@@ -109,10 +116,63 @@ class _MasterclassCreationScreenState extends State<MasterclassCreationScreen> {
     }
   }
 
+  Future<void> _saveMasterclass() async {
+    try {
+      var request = http.MultipartRequest(
+        'POST',
+        Uri.parse('http://192.168.18.125/api/save_masterclass.php'),
+      );
+
+      // Agregar campos de texto
+      request.fields['titulo'] = tituloController.text;
+      request.fields['categoria'] = selectedCategory ?? '';
+      request.fields['descripcion'] = descripcionController.text;
+      request.fields['objetivos'] = objetivosController.text;
+      request.fields['fecha_finalizacion'] = dateController.text;
+      request.fields['telefono'] = phoneController.text;
+      request.fields['correo'] = correoController.text;
+      request.fields['enlace_reunion'] = enlaceController.text;
+
+      // Agregar imagen si existe
+      if (_imageFile != null) {
+        request.files.add(
+          await http.MultipartFile.fromPath('imagen', _imageFile!.path),
+        );
+      }
+
+      var response = await request.send();
+      var responseData = await response.stream.bytesToString();
+      var data = json.decode(responseData);
+
+      if (data['success']) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Masterclass guardada exitosamente')),
+        );
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const MasterclassScreen()),
+        );
+      } else {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Error: ${data['message']}')));
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Error de conexión: $e')));
+    }
+  }
+
   @override
   void dispose() {
     phoneController.dispose();
     dateController.dispose();
+    tituloController.dispose();
+    descripcionController.dispose();
+    objetivosController.dispose();
+    correoController.dispose();
+    enlaceController.dispose();
     super.dispose();
   }
 
@@ -188,6 +248,7 @@ class _MasterclassCreationScreenState extends State<MasterclassCreationScreen> {
               const SizedBox(height: 15),
               const Text('Título'),
               TextField(
+                controller: tituloController,
                 decoration: InputDecoration(
                   hintText: 'Título de la masterclass',
                   hintStyle: TextStyle(
@@ -246,6 +307,7 @@ class _MasterclassCreationScreenState extends State<MasterclassCreationScreen> {
               const SizedBox(height: 15),
               const Text('Descripción'),
               TextField(
+                controller: descripcionController,
                 minLines: 3,
                 maxLines: 5,
                 decoration: InputDecoration(
@@ -268,6 +330,7 @@ class _MasterclassCreationScreenState extends State<MasterclassCreationScreen> {
               const SizedBox(height: 15),
               const Text('Objetivos'),
               TextField(
+                controller: objetivosController,
                 minLines: 3,
                 maxLines: 5,
                 decoration: InputDecoration(
@@ -366,6 +429,7 @@ class _MasterclassCreationScreenState extends State<MasterclassCreationScreen> {
               const SizedBox(height: 15),
               const Text('Correo'),
               TextField(
+                controller: correoController,
                 keyboardType: TextInputType.emailAddress,
                 decoration: InputDecoration(
                   hintText: 'Correo electrónico',
@@ -490,6 +554,7 @@ class _MasterclassCreationScreenState extends State<MasterclassCreationScreen> {
               const SizedBox(height: 15),
               const Text('Enlace de la reunión'),
               TextField(
+                controller: enlaceController,
                 decoration: InputDecoration(
                   hintText: 'Link de la reunión',
                   hintStyle: TextStyle(
@@ -509,14 +574,7 @@ class _MasterclassCreationScreenState extends State<MasterclassCreationScreen> {
               Container(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const MasterclassScreen(),
-                      ),
-                    );
-                  },
+                  onPressed: _saveMasterclass,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color.fromARGB(255, 255, 255, 255),
                     padding: const EdgeInsets.all(12),
