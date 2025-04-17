@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+import 'package:prueba_lunes_17/menu.dart';
+
 void main() {
   runApp(const MyApp());
 }
@@ -17,37 +19,39 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.green,
         scaffoldBackgroundColor: const Color.fromARGB(255, 255, 255, 255),
       ),
-      home: const PromoHomePage(),
+      home: const PromoHomePageAbel(),
       debugShowCheckedModeBanner: false,
     );
   }
 }
 
-class PromoHomePage extends StatefulWidget {
-  const PromoHomePage({Key? key}) : super(key: key);
+class PromoHomePageAbel extends StatefulWidget {
+  const PromoHomePageAbel({Key? key}) : super(key: key);
 
   @override
-  State<PromoHomePage> createState() => _PromoHomePageState();
+  State<PromoHomePageAbel> createState() => _PromoHomePageAbelState();
 }
 
-class _PromoHomePageState extends State<PromoHomePage> {
-  List<Map<String, dynamic>> courses = [];
-  List<Map<String, dynamic>> filteredCourses = [];
+class _PromoHomePageAbelState extends State<PromoHomePageAbel> {
+  List<Map<String, dynamic>> masterclass = [];
+  List<Map<String, dynamic>> filteredMasterclass = [];
   bool isLoading = true;
-  String? selectedTeacher;
+  String? selectedCategoria;
   static const int itemsPerPage = 6;
   int currentPage = 1;
   bool isSearching = false;
   final TextEditingController searchController = TextEditingController();
 
-  int get totalPages => (filteredCourses.length / itemsPerPage).ceil();
+  int get totalPages => (filteredMasterclass.length / itemsPerPage).ceil();
 
-  List<Map<String, dynamic>> get paginatedCourses {
+  List<Map<String, dynamic>> get paginatedMasterclass {
     final startIndex = (currentPage - 1) * itemsPerPage;
     final endIndex = startIndex + itemsPerPage;
-    return filteredCourses.sublist(
+    return filteredMasterclass.sublist(
       startIndex,
-      endIndex > filteredCourses.length ? filteredCourses.length : endIndex,
+      endIndex > filteredMasterclass.length
+          ? filteredMasterclass.length
+          : endIndex,
     );
   }
 
@@ -60,7 +64,7 @@ class _PromoHomePageState extends State<PromoHomePage> {
   @override
   void initState() {
     super.initState();
-    getCourses();
+    getMasterclass();
   }
 
   @override
@@ -69,7 +73,7 @@ class _PromoHomePageState extends State<PromoHomePage> {
     super.dispose();
   }
 
-  Future<void> getCourses() async {
+  Future<void> getMasterclass() async {
     try {
       final response = await http.get(
         Uri.parse('http://192.168.18.125/api/get_courses.php'),
@@ -78,8 +82,8 @@ class _PromoHomePageState extends State<PromoHomePage> {
       if (response.statusCode == 200) {
         final List<dynamic> data = json.decode(response.body);
         setState(() {
-          courses = List<Map<String, dynamic>>.from(data);
-          filteredCourses = courses;
+          masterclass = List<Map<String, dynamic>>.from(data);
+          filteredMasterclass = masterclass;
           isLoading = false;
         });
       }
@@ -89,35 +93,36 @@ class _PromoHomePageState extends State<PromoHomePage> {
     }
   }
 
-  void filterByTeacher(String? teacher) {
+  void filterByCategoria(String? categoria) {
     setState(() {
-      selectedTeacher = teacher;
-      if (teacher == null) {
-        filteredCourses = courses;
+      selectedCategoria = categoria;
+      if (categoria == null) {
+        filteredMasterclass = masterclass;
       } else {
-        filteredCourses =
-            courses
+        filteredMasterclass =
+            masterclass
                 .where(
-                  (course) =>
-                      course['teacher']?.toString().toLowerCase() ==
-                      teacher.toLowerCase(),
+                  (masterclass) =>
+                      masterclass['categoria']?.toString().toLowerCase() ==
+                      categoria.toLowerCase(),
                 )
                 .toList();
       }
     });
   }
 
-  void searchCourses(String searchTerm) {
+  void searchMasterclass(String searchTerm) {
     setState(() {
       if (searchTerm.isEmpty) {
-        filteredCourses = courses;
+        filteredMasterclass = masterclass;
       } else {
-        filteredCourses =
-            courses
+        filteredMasterclass =
+            masterclass
                 .where(
-                  (course) => course['title'].toString().toLowerCase().contains(
-                    searchTerm.toLowerCase(),
-                  ),
+                  (masterclass) => masterclass['titulo']
+                      .toString()
+                      .toLowerCase()
+                      .contains(searchTerm.toLowerCase()),
                 )
                 .toList();
       }
@@ -133,7 +138,12 @@ class _PromoHomePageState extends State<PromoHomePage> {
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () {},
+          onPressed: () {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => const MainScreen()),
+            );
+          },
         ),
         title:
             isSearching
@@ -142,11 +152,11 @@ class _PromoHomePageState extends State<PromoHomePage> {
                   autofocus: true,
                   style: const TextStyle(color: Colors.white),
                   decoration: const InputDecoration(
-                    hintText: 'Buscar curso...',
+                    hintText: 'Buscar masterclass...',
                     hintStyle: TextStyle(color: Colors.white70),
                     border: InputBorder.none,
                   ),
-                  onChanged: (value) => searchCourses(value),
+                  onChanged: (value) => searchMasterclass(value),
                 )
                 : Center(
                   child: Row(
@@ -172,7 +182,7 @@ class _PromoHomePageState extends State<PromoHomePage> {
                 if (isSearching) {
                   isSearching = false;
                   searchController.clear();
-                  searchCourses('');
+                  searchMasterclass('');
                 } else {
                   isSearching = true;
                 }
@@ -199,7 +209,7 @@ class _PromoHomePageState extends State<PromoHomePage> {
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                   GestureDetector(
-                    onTap: () => filterByTeacher(null),
+                    onTap: () => filterByCategoria(null),
                     child: Text(
                       'Ver todo >',
                       style: TextStyle(
@@ -351,16 +361,16 @@ class _PromoHomePageState extends State<PromoHomePage> {
                         ),
                         shrinkWrap: true,
                         physics: NeverScrollableScrollPhysics(),
-                        itemCount: paginatedCourses.length,
+                        itemCount: paginatedMasterclass.length,
                         itemBuilder: (context, index) {
-                          final course = paginatedCourses[index];
+                          final masterclass = paginatedMasterclass[index];
                           return GestureDetector(
                             onTap: () {},
-                            child: _buildCourseCard(
-                              course['title'],
-                              course['teacher'],
-                              course['duration'],
-                              course['image_path'],
+                            child: _buildMasterclassCard(
+                              masterclass['titulo'],
+                              masterclass['categoria'],
+                              masterclass['fecha_creacion'],
+                              masterclass['imagen_path'],
                             ),
                           );
                         },
@@ -399,17 +409,17 @@ class _PromoHomePageState extends State<PromoHomePage> {
     );
   }
 
-  Widget _buildCategoryItem(String imagePath, String title, Color color) {
-    final bool isSelected = selectedTeacher == title;
+  Widget _buildCategoryItem(String imagePath, String titulo, Color color) {
+    final bool isSelected = selectedCategoria == titulo;
     return GestureDetector(
-      onTap: () => filterByTeacher(title),
+      onTap: () => filterByCategoria(titulo),
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 8, vertical: 10),
         decoration: BoxDecoration(
           color: isSelected ? color.withOpacity(0.1) : Colors.white,
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
-            color: const Color.fromARGB(255, 245, 245, 245)!,
+            color: const Color.fromARGB(255, 245, 245, 245),
             width: 1,
           ),
         ),
@@ -424,7 +434,7 @@ class _PromoHomePageState extends State<PromoHomePage> {
             ),
             SizedBox(width: 6),
             Text(
-              title,
+              titulo,
               style: TextStyle(fontSize: 11),
               overflow: TextOverflow.ellipsis,
             ),
@@ -434,12 +444,15 @@ class _PromoHomePageState extends State<PromoHomePage> {
     );
   }
 
-  Widget _buildCourseCard(
-    String title,
-    String author,
-    String duration,
-    String imagePath,
+  Widget _buildMasterclassCard(
+    String titulo,
+    String categoria,
+    String fecha_creacion,
+    String imagenPath,
   ) {
+    // Construir la URL completa para la imagen
+    String imageUrl = 'http://192.168.18.125/api/$imagenPath';
+
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -467,28 +480,63 @@ class _PromoHomePageState extends State<PromoHomePage> {
                     topLeft: Radius.circular(10),
                     topRight: Radius.circular(10),
                   ),
-                  image: DecorationImage(
-                    image: AssetImage(imagePath),
+                ),
+                // Usar Image.network en lugar de AssetImage
+                child: ClipRRect(
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(10),
+                    topRight: Radius.circular(10),
+                  ),
+                  child: Image.network(
+                    imageUrl,
                     fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) {
+                      return Center(
+                        child: Icon(Icons.error, color: Colors.red),
+                      );
+                    },
+                    loadingBuilder: (context, child, loadingProgress) {
+                      if (loadingProgress == null) return child;
+                      return Center(child: CircularProgressIndicator());
+                    },
                   ),
                 ),
               ),
             ],
           ),
+          /*Stack(
+            children: [
+              Container(
+                height: 100,
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  color: Colors.grey[300],
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(10),
+                    topRight: Radius.circular(10),
+                  ),
+                  image: DecorationImage(
+                    image: AssetImage(imagenPath),
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
+            ],
+          ),*/
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  title,
+                  titulo,
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                 ),
                 SizedBox(height: 4),
                 Text(
-                  author,
+                  categoria,
                   style: TextStyle(fontSize: 12, color: Colors.grey[700]),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
@@ -499,7 +547,7 @@ class _PromoHomePageState extends State<PromoHomePage> {
                     Icon(Icons.access_time, size: 12, color: Colors.grey),
                     SizedBox(width: 4),
                     Text(
-                      duration,
+                      fecha_creacion,
                       style: TextStyle(fontSize: 10, color: Colors.grey),
                     ),
                   ],
